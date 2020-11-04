@@ -17,4 +17,10 @@ public class Time {
     public int getInSeconds(){
         return hour*60*60+ minute*60+ second;
     }
+    public boolean earlierThan(Time anotherTime){
+        return this.getInSeconds()<anotherTime.getInSeconds();
+    }
+    public String toString(){
+        return hour+ ":"+ minute +":" +second;
+    }
 }
