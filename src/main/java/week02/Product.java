@@ -20,7 +20,7 @@ public class Product {
         return name.equals( p.name);
     }
     public boolean areStrictEqual(Product p){
-        return code.length() == p.code.length();
+        return this.areTheyEqual(p) && code.length() == p.code.length();
 
     }
 
