@@ -26,8 +26,14 @@ public class ArraysMain {
     public boolean sameTempValues(double[] day, double[] anotherDay){
         return Arrays.equals(day, anotherDay);
     }
-    public boolean wonLottery(int[] bet, int[] result){
+    public boolean wonLottery(int[] bet, int[] result){// // //
+//        int[] copyB= Arrays.copyOf(bet, bet.length);
+//        int[] copyR= Arrays.copyOf(result, result.length);
+        Arrays.sort(bet);
+        Arrays.sort(result);
+
         return Arrays.equals(bet, result);
+        //return Arrays.equals(Arrays.toString(Arrays.sort(bet)), Arrays.toString(Arrays.sort(return)));
     }
 
     public static void main(String[] args) {
@@ -41,13 +47,11 @@ public class ArraysMain {
         double[] anotherDay={15, 24, 28, 14};
         System.out.println(a.sameTempValues(day, anotherDay) ? "azonos" : "különbözik");
 
-        int[] bet= {11,22,53,12,66};
-        int[] result= {22,66,53,12,11};
-        //int[] ren= Arrays.sort(bet);
-        //System.out.println(ren);
-        //System.out.println(a.wonLottery(Arrays.sort(bet), Arrays.sort(result)));
-        System.out.println(bet);
-        System.out.println(result);
+        int[] bet= {11,24,55,12,66};
+        int[] result= {24,66,55,12,11};
+
+        System.out.println(a.wonLottery(bet, result)? "nyert" : "nem nyert");
+
 
 
 
