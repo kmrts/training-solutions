@@ -1,6 +1,14 @@
 package objects;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
+
 public class ObjectsMain {
+
     public static void main(String[] args) {
         new Book();
         System.out.println(new Book()); //objects.Book@7699a589
@@ -40,7 +48,16 @@ public class ObjectsMain {
         book5 = new Book();
         book6 = null;
 
-        //5 obj, 3-hoz férh hozzá
+        //5 obj, 3-hoz férh hozzá (1,2,5)
+
+        Book[] books= {book1, book2, book5};
+        List<Book> boker= Arrays.asList(book5, book2, book1);
+        List<Book> boker2= new ArrayList<>();
+        boker2.add(book2);
+        boker2.add(book5);
+        boker2.add(book1);
+
+//        System.out.println(books); // [Lobjects.Book;@6d03e736
 
     }
 }
