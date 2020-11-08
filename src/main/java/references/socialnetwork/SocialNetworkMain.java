@@ -16,7 +16,10 @@ public class SocialNetworkMain {
 //        Member{name='Richard', connections=[]}]}
 
         socialNetwork.connect("Joe", "John");
+        socialNetwork.connect("Joe", "John");    //kétszer lesz-e John
+
         socialNetwork.connect("John", "Joe");
+//        socialNetwork.connect("Richard", "Jane");
 
         System.out.println(socialNetwork);
 //        SocialNetwork{members=[Member{name='Joe', connections=[John]},

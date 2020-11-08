@@ -23,11 +23,21 @@ public class SocialNetwork {
     }
 
     public void connect(String name, String otherName) {
-            //leh.ne ell, van-e már conn.-va
+            //volt-e már conn.-va
+//        if(findByName(name).getConnections().contains((otherName))){
 
+        boolean exists= false;
+        for(Member mem: findByName(name).getConnections()){
+            if(mem.getName() ==otherName){
+                exists= true;
+            }
+        }
+        if (!exists) {
             findByName(name).connectMember(findByName(otherName));
+        }
 
     }
+
     public List<String> bidirectionalConnections(){
         List<String> bidiConns= new ArrayList<>();
         for (Member mem1: members){
