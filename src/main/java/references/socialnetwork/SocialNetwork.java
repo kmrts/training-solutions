@@ -23,7 +23,7 @@ public class SocialNetwork {
     }
 
     public void connect(String name, String otherName) {
-            //van-e már conn.-va
+            //leh.ne ell, van-e már conn.-va
 
             findByName(name).connectMember(findByName(otherName));
 

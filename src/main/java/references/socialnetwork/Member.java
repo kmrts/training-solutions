@@ -17,7 +17,7 @@ public class Member {
     public String toString() {
         return "Member{" +
                 "name='" + name + '\'' +
-                ", connections=" + connections +
+                ", connections=" + connectedNames()+ //
                 '}';
     }
 
@@ -30,6 +30,13 @@ public class Member {
     }
     public void connectMember(Member member){
         connections.add(member);
+    }
+    public List<String> connectedNames(){
+        List<String> connNam= new ArrayList<>();
+        for (Member mem: connections){
+            connNam.add(mem.getName());
+        }
+        return connNam;
     }
 
 }
