@@ -23,10 +23,22 @@ public class SocialNetwork {
     }
 
     public void connect(String name, String otherName) {
+            //van-e már conn.-va
 
             findByName(name).connectMember(findByName(otherName));
 
+    }
+    public List<String> bidirectionalConnections(){
+        List<String> bidiConns= new ArrayList<>();
+        for (Member mem1: members){
+            for (Member mem2: mem1.getConnections() ){
+                if(mem2.getConnections().contains(mem1)){
+                    bidiConns.add(mem1.getName() +" - "+ mem2.getName());
+                }
+            }
         }
+        return bidiConns;
+    }
 
 
     private Member findByName(String name) {

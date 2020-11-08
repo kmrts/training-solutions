@@ -13,7 +13,6 @@ public class Member {
         this.name = name;
 
     }
-
     @Override
     public String toString() {
         return "Member{" +
@@ -25,7 +24,6 @@ public class Member {
     public String getName() {
         return name;
     }
-
 
     public List<Member> getConnections() {
         return connections;
