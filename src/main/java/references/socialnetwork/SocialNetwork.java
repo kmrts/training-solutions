@@ -1,12 +1,20 @@
 package references.socialnetwork;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SocialNetwork {
-    private List<Member> members;
+    private List<Member> members= new ArrayList<>();//
 
-    public SocialNetwork(List<Member> members) {
+    public SocialNetwork() {
         this.members = members;
+    }
+
+    @Override
+    public String toString() {
+        return "SocialNetwork{" +
+                "members=" + members +
+                '}';
     }
 
     public void addMember(String name) {
@@ -16,26 +24,6 @@ public class SocialNetwork {
 
     public void connect(String name, String otherName) {
 
-//        Member mem1 = new Member("noname");
-//        Member mem2 = new Member("noname");
-//        boolean isMember1 = false;
-//        boolean isMember2 = false;
-//        for (Member mem : members) {
-//            if (mem.getName() == name) {
-//                isMember1 = true;
-//                mem1 = mem;
-//            }
-//            if (mem.getName() == otherName) {
-//                isMember2 = true;
-//                mem2 = mem;
-//            }
-//        }
-//        if (isMember1 && isMember2) {
-//            //getConba benn vane-
-//            for (Member mem : mem1.getConnections()) {
-//
-//            }
-//        mem1.connectMember(mem2);
             findByName(name).connectMember(findByName(otherName));
 
         }
