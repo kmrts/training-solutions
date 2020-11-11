@@ -25,4 +25,17 @@ public class GentlemanTest {
 //    Expected :Helle Ben
 //    Actual   :Hello Ben
 
+//    75%
+    @Test
+    public void testNull(){
+        //Given
+        String name= null;
+
+        //When
+        String resName= new Gentleman().sayHello(null);
+
+        //Then
+        assertEquals("Hello Anonymous", resName);
+    }
+//    100 % lefed.
 }
