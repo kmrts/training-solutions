@@ -17,5 +17,12 @@ public class GentlemanTest {
         //Then
         assertEquals("Hello Ben", resName);
     }
+//    org.junit.ComparisonFailure:
+//    Expected :Hello Ben
+//    Actual   :Helle Ben
+
+//    org.junit.ComparisonFailure:
+//    Expected :Helle Ben
+//    Actual   :Hello Ben
 
 }
