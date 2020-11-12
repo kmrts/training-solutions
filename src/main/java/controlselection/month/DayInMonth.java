@@ -57,6 +57,8 @@ public class DayInMonth {
             case "december":
                 daynum= 31;
                 break;
+            default:
+                throw new IllegalArgumentException("Invalid month: " + month);
         }
         return daynum;
     }
@@ -68,5 +70,6 @@ public class DayInMonth {
         System.out.println(dm.numDays(1900, "február"));
         System.out.println(dm.numDays(2000, "február"));
         System.out.println(dm.numDays(2020, "November"));
+        System.out.println(dm.numDays(2020, "febcius"));
     }
 }
