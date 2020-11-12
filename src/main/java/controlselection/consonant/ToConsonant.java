@@ -1,7 +1,7 @@
 package controlselection.consonant;
 
 public class ToConsonant {
-    public static final String VOWS = "aeiou";
+    public static final String VOWS = "aeiouAEIOU";
 
     public char toC (char c) {
         if (VOWS.indexOf(c) != -1) {
@@ -17,5 +17,6 @@ public class ToConsonant {
 
         System.out.println(tc.toC('i'));
         System.out.println(tc.toC('w'));
+        System.out.println(tc.toC('E'));
     }
 }
