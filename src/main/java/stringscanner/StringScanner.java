@@ -1,46 +1,54 @@
 package stringscanner;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class StringScanner {
     public int readAndSumValues(String intString, String delimiter){
-        if(isEmpty(intString) || isEmpty(delimiter)){
-            throw new IllegalArgumentException("Illegal argument!");
+
+        try (Scanner s= new Scanner(intString)){  ///
+            if(!isEmpty(delimiter)){
+                s.useDelimiter(delimiter);
+            }
+            int sum=0;
+            try {
+                while (s.hasNext()) {  //
+                    sum += s.nextInt();
+                }
+            }
+            catch (InputMismatchException ex){
+                throw new IllegalArgumentException("Incorrect parameter string!");
+            }
+
+            return sum;
         }
-        Scanner s= new Scanner(intString).useDelimiter(delimiter);
-        int sum=0;
-        while(s.hasNextInt()){
-            int value= s.nextInt();
-            sum+= value;
-        }
-        return sum;
+
+
     }
-    public int readAndSumValues(String intString){
-        if(isEmpty(intString)){
-            throw new IllegalArgumentException("Illegal argument!");
-        }
-        Scanner s= new Scanner(intString);
-        int sum=0;
-        while(s.hasNextInt()){
-            int value= s.nextInt();
-            sum+= value;
-        }
-        return sum;
+    public int readAndSumValues(String intString){  ///
+        return readAndSumValues(intString, null);
+
     }
     public String filterLinesWithWordOccurrences(String text, String word){
-        if(isEmpty(text) || isEmpty(word)){
-            throw new IllegalArgumentException("Illegal argument!");
+        if(isEmpty(text) || word== null || "".equals(word) ){  ///
+            throw new IllegalArgumentException("Incorrect parameter string!");
         }
         Scanner s= new Scanner(text);
+        String filtered="";
         while(s.hasNextLine()){
             String row=s.nextLine();
 
+            if(row.contains(word)){
+                filtered+=row;
+                filtered+="\n";
+            }
+
         }
-        return null;
+        return filtered.toString().trim();   //uts 2 nélkül nem
     }
 
     public boolean isEmpty(String s){
-        if(s==null || "".equals(s)){
+        if(s==null || "".equals(s.trim())){  ///kell a trim()
             return true;
         }
         return false;
