@@ -46,4 +46,10 @@ public class Transaction {
     public TransactionStatus getStatus() {
         return status;
     }
+    public void setExecuted(){  ///
+        status= TransactionStatus.SUCCEEDED;
+    }
+    public void setNotExecuted(){
+        status= TransactionStatus.PENDING;
+    }
 }
