@@ -49,4 +49,12 @@ public class TransactionExecutionTest {
 
     }
 
+    @Test   /// saj.
+    public void testExecuteDebitNotOkStatus() {
+
+        test.executeTransactions(transactions, accounts);
+        assertEquals("PENDING", transactions.get(2).getStatus().toString());   //toString() nélkül nem ok
+
+    }
+
 }
