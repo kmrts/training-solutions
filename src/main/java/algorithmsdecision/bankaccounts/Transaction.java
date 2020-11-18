@@ -1,7 +1,5 @@
 package algorithmsdecision.bankaccounts;
 
-import algorithmssum.transactions.TransactionOperation;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,9 +12,38 @@ public class Transaction {
     private LocalDateTime dateOfTransaction;
     private TransactionStatus status;
 
-//    Feladat egy metódus megírása, ami eldönti van-e olyan terhelés (debit) tranzakció egy adott dátum intervallumon belül, amely egy adott összeghatárnál nagyobb.
+    public Transaction(String accountNumber, TransactionOperation transactionOperation, int amount, LocalDateTime dateOfTransaction//, TransactionStatus status
+                       ) {
+        this.accountNumber = accountNumber;
+        this.transactionOperation = transactionOperation;
+        this.amount = amount;
+        this.dateOfTransaction = dateOfTransaction;
+        status = TransactionStatus.CREATED;   //
+    }
 
-//    A dateOfTransaction attribútum típusa legyen LocalDateTime típusú, mely tárolja a dátumot és az időt.
-//    Ennek van egy isAfter() és isBefore() metódusa, mellyel eldönthető, hogy a paraméterként átadott másik dátum előtte vagy utána van-e.
+    public String getAccountNumber() {
+        return accountNumber;
+    }
 
+    public TransactionOperation getTransactionOperation() {
+        return transactionOperation;
+    }
+    public boolean isCredit(){
+        return transactionOperation == TransactionOperation.CREDIT;
+    }
+    public boolean isDebit(){
+        return transactionOperation == TransactionOperation.DEBIT;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public LocalDateTime getDateOfTransaction() {
+        return dateOfTransaction;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
 }
