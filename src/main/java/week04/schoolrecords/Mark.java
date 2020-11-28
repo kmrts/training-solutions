@@ -38,11 +38,6 @@ public class Mark {
     @Override
     public String toString() {
         return markType.getDescription()+"(" +markType.getValue() +")";
-//                "
-//                ""Mark{" +
-//                "markType=" + markType +
-//                ", subject=" + subject +
-//                ", tutor=" + tutor +
-//                '}';
+
     }
 }

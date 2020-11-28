@@ -24,7 +24,7 @@ public class Tutor {
 //        }
         boolean contains = false;
         for (Subject s : taughtSubjects) {
-            if (s.getSubjectName() == subject.getSubjectName()) {
+            if (s.getSubjectName().equals(subject.getSubjectName())) { //==
                 contains = true;
                 break;
             }
