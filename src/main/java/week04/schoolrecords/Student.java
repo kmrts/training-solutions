@@ -44,13 +44,16 @@ public class Student {
     } // érdemjegy rögzítése
 
     public double calculateAverage(){
-        int sum= 0;
-        for(Mark m: marks){
-            sum+=m.getMarkType().getValue();
-        }
-        return Math.round((double)sum / marks.size() *100) /100.0; //2 jegyre ker., kell a .0 a végén
+
+            int sum= 0;
+            for(Mark m: marks){
+                sum+=m.getMarkType().getValue();
+            }
+            return Math.round((double)sum / marks.size() *100) /100.0; //2 jegyre ker., kell a .0 a végén
+//        }
 
     } // teljes átlag számolása
+
     public double calculateSubjectAverage(Subject subject){
         int sum= 0;
         int count= 0;
