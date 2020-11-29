@@ -28,4 +28,22 @@ public class MarkTest {
         assertEquals(TUTOR, mark.getTutor());
         assertEquals("excellent(5)", mark.toString());
     }
+
+    @Test
+    public void testConstr(){
+        Mark mark =new Mark(MarkType.valueOf("B"), SUBJECT, TUTOR); //4 és "4" nem jó
+        assertEquals(4, mark.getMarkType().getValue());
+
+        Mark mark1 = new Mark("4", SUBJECT, TUTOR);
+        assertEquals(4, mark1.getMarkType().getValue());
+        Mark mark2 = new Mark("2", SUBJECT, TUTOR);
+        assertEquals("close fail", mark2.getMarkType().getDescription());
+
+        Mark mark3 = new Mark("F", SUBJECT, TUTOR);
+        assertEquals("fail", mark3.getMarkType().getDescription());
+
+        Mark mark4 = new Mark("más egyéb", SUBJECT, TUTOR);
+        assertEquals(1, mark4.getMarkType().getValue());
+
+    }
 }

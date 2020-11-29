@@ -83,10 +83,10 @@ public class SchoolRecordsController {
                     break;
                 case "7"://        Tantárgyi átlag kiszámolása - calculateClassAverageBySubject() eredményének kiírása
                     System.out.println("Mely tárgy átlagára kíváncsi: ");
-                    cl.calculateClassAverageBySubject(new Subject(sc.nextLine()));
+                    System.out.println(cl.calculateClassAverageBySubject(new Subject(sc.nextLine())));                    ;
                     break;
                 case "8"://        Diákok átlagának megjelenítése - listStudyResults() eredményének kiírása
-                    cl.listStudyResults();
+                    System.out.println(cl.listStudyResults()); //lista elemek tagolt kiírása...
                     break;
                 case "9"://        Diák átlagának kiírása - be kell kérni a nevét,
                     // findStudentByName(), majd az eredményen calculateAverage()
@@ -114,7 +114,7 @@ public class SchoolRecordsController {
         Scanner sc=new Scanner(System.in);
         Student sNext = cl.repetition();
         System.out.println(sNext.getName());
-        System.out.println("Felelés, "+sNext+ "érdemjegye: ");
+        System.out.println("Felelés, "+sNext.getName()+ " érdemjegye: ");
         String note= sc.nextLine();
         System.out.println("Tantárgy neve: ");
         String subj= sc.nextLine();
@@ -129,16 +129,18 @@ public class SchoolRecordsController {
 //                correct= true;
 //                t1= t;
                 System.out.println("van egyezés");
-                Mark mark=new Mark(MarkType.valueOf(note), s1, t);
+                Mark mark=new Mark(note, s1, t);
+
                 sNext.grading(mark);
+                System.out.println(sNext.getMarks().get(0));
                 break;
             }
         }
-//        if(correct){
-////            Mark mark=new Mark(new MarkType(note), s1, t1);
-//        }
-////        new Mark(new MarkType(note), new Subject(subj), new Tutor(tut) );
     }
+//    6-os néha no mmarks throw,
+//    10-es rossz eredm,
+//    8-as lista kiiratás formázandó
+
 
     public static void main(String[] args) {
 

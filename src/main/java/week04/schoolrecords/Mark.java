@@ -18,7 +18,30 @@ public class Mark {
     }
 
     public Mark(String markType, Subject subject, Tutor tutor) {
-        this.markType = MarkType.valueOf(markType);  ////
+
+        switch (markType){
+            case "5":
+            case "A":
+                this.markType= MarkType.A;
+                break;
+            case "4":
+            case "B":
+                this.markType= MarkType.B;
+                break;
+            case "3":
+            case "C":
+                this.markType= MarkType.C;
+                break;
+            case "2":
+            case "D":
+                this.markType= MarkType.D;
+                break;
+            case "1":
+            case "F":
+            default:
+                this.markType= MarkType.F;
+                break;
+        }
         this.subject = subject;
         this.tutor = tutor;
     }
