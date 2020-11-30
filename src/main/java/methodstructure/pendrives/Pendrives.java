@@ -3,13 +3,6 @@ package methodstructure.pendrives;
 import java.util.List;
 
 public class Pendrives {
-    //A Pendrives részletei: A metódusokat úgy implementáld, hogy nem hívod a Pendrive getPrice() metódusát.
-    //
-    //    Legyen Pendrive best(List<Pendrive>) metódusa, amely a legjobb ár/kapacitás értékű pendrive-t adja vissza,
-    //    azaz amelyiknél ez a legkisebb.
-    //    Legyen Pendrive cheapest(List<Pendrive>) metódusa, amely a legolcsóbbat adja vissza.
-    //    Legyen void risePriceWhereCapacity(List<Pendrive>, int percent, int capacity) metódusa,
-    //    amely adott százalékkal megemeli azon pendrive-ok árát, amelynek a kapacitása a megadott értékkel megegyezik.
 
     public Pendrive best(List<Pendrive> pendriveList){
         Pendrive best= null;
@@ -22,7 +15,7 @@ public class Pendrives {
     }
     public Pendrive cheapest(List<Pendrive> pendriveList){
         Pendrive cheapest= null;
-        for(Pendrive p: pendriveList){ //nem hívod a Pendrive getPrice() metódusát.
+        for(Pendrive p: pendriveList){ //nem hívod a Pendrive getPrice() metódusát.  //cheaperThan-ra utalt
             if(cheapest==null || p.pricePerCapacity()*p.getCapacity() < cheapest.pricePerCapacity()*cheapest.getCapacity()){
                 cheapest= p;
             }
