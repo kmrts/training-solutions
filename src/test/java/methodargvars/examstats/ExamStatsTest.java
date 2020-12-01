@@ -31,7 +31,7 @@ public class ExamStatsTest {
 
     @Test
     public void nullResultsShouldThrowException() throws IllegalArgumentException {
-
+//IllegalArgumentException.class vs NullPointerException
         Exception ex = assertThrows(IllegalArgumentException.class, () -> examStats.getNumberOfTopGrades(85, null));
         assertEquals("Number of results must not be empty!", ex.getMessage());
     }

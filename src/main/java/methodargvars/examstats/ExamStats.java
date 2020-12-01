@@ -14,7 +14,8 @@ public class ExamStats {
     // public boolean hasAnyFailed(int limitInPercent, int... results)
 
     //Ha a felsorolást nem adja meg a felhasználó (kihagyja a paramétert), a metódusnál nem mutat hibát az IDE.
-    // Vararg esetén ugyanis ilyenkor automatikusan üres tömb lesz a paraméter. Ebben az esetben viszont IllegalArgumentException-t várunk,
+    // Vararg esetén ugyanis ilyenkor automatikusan üres tömb lesz a paraméter. Ebben az esetben viszont
+    // IllegalArgumentException-t várunk,
     // a megfelelő tájékoztató szöveggel.
 
     private int maxPoints;
@@ -22,7 +23,18 @@ public class ExamStats {
     public ExamStats(int maxPoints) {
         this.maxPoints = maxPoints;
     }
+
     public int getNumberOfTopGrades(int limitInPercent, int... results){
+//        if (results==null){
+//            throw new IllegalArgumentException("Number of results must not be empty!");
+//        }
+//        if (results.length== 0){
+//            throw new IllegalArgumentException("Number of results must not be empty!");
+        //ford sorr nem jó a teszt
+        if (results==null || results.length== 0){  //results.length== 0 || results==null
+            throw new IllegalArgumentException("Number of results must not be empty!");
+        }
+
         int num= 0;
         for(int r: results){
             if(r > maxPoints* limitInPercent/100){
@@ -32,6 +44,9 @@ public class ExamStats {
         return num;
     }
     public boolean hasAnyFailed(int limitInPercent, int... results){
+        if (results.length== 0){
+            throw new IllegalArgumentException("Number of results must not be empty!");
+        }
         boolean failed= false;
         for(int r: results){
             if(r < maxPoints* limitInPercent/100){
