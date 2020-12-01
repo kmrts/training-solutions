@@ -37,6 +37,16 @@ public class RobotTest {
         //Then
         assertEquals(0, robot.getAzimut());
     }
+    @Test
+    public void testOver360(){ // saj.
+
+        robot.go(100).rotate(60).go(20).rotate(250).registerNavigationPoint();
+        robot.go(150).rotate(55).go(15).registerNavigationPoint();
+        robot.rotate(-185).go(155).registerNavigationPoint().rotate(-200).go(4).registerNavigationPoint();
+        //Then
+        assertEquals("[distance: 120 azimut: 310, distance: 285 azimut: 5, " +
+                "distance: 440 azimut: 180, distance: 444 azimut: 340]", robot.getNavigationList().toString());
+    }
 
     //Bónusz feladat tesztje, kommentezd ki az alapfeladathoz
     @Test
