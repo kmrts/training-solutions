@@ -35,9 +35,9 @@ public class SimpleBag {
         items.add(item);
     }
 
-    public boolean isEmpty() {
-
-    }
+//    public boolean isEmpty() {
+//
+//    }
 
     public int size() {
         return items.size();
