@@ -23,8 +23,22 @@ public class Lab {
     public Lab(String title, LocalDateTime completedAt) {
         this.title = title;
         this.completedAt = completedAt;
+        this.completed= true;
 
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
     public void complete(LocalDateTime date){
         completed= true;
         completedAt= date;
@@ -38,10 +52,8 @@ public class Lab {
 
     @Override
     public String toString() {
-        return "Lab{" +
-                "title='" + title + '\'' +
-                ", completed=" + completed +
-                ", completedAt=" + completedAt +
-                '}';
+        return "title: " + title +
+                ", completed: " + completed +
+                ", completedAt: " + completedAt;
     }
 }
