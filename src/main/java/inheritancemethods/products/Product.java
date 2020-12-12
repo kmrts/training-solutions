@@ -29,6 +29,19 @@ public class Product {
         this.unitWeight = unitWeight;
         this.numberOfDecimals = 2;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getUnitWeight() {
+        return unitWeight;
+    }
+
+    public int getNumberOfDecimals() {
+        return numberOfDecimals;
+    }
+
     public BigDecimal totalWeight(int pieces){
         return unitWeight.multiply(BigDecimal.valueOf(pieces));
     }

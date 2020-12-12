@@ -2,7 +2,7 @@ package inheritancemethods.products;
 
 import java.math.BigDecimal;
 
-public class PacketProduct extends Product{
+public class PackedProduct extends Product{
     //PacketProduct osztály int packingUnit és BigDecimal weightOfBox attribútumokkal.
     // Ezek megadják, hogy a termékből hány darab helyezhető egy dobozba, és annak súlya alapján
     // a csomagolt termék súlya számítható.
@@ -19,10 +19,18 @@ public class PacketProduct extends Product{
     private int packingUnit;
     private BigDecimal weightOfBox;
 
-    public PacketProduct(String name, BigDecimal unitWeight, int numberOfDecimals, int packingUnit, BigDecimal weightOfBox) {
+    public PackedProduct(String name, BigDecimal unitWeight, int numberOfDecimals, int packingUnit, BigDecimal weightOfBox) {
         super(name, unitWeight, numberOfDecimals);
         this.packingUnit = packingUnit;
         this.weightOfBox = weightOfBox;
+    }
+
+    public int getPackingUnit() {
+        return packingUnit;
+    }
+
+    public BigDecimal getWeightOfBox() {
+        return weightOfBox;
     }
 
     @Override
