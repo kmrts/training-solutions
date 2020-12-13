@@ -18,5 +18,15 @@ class LabTest {
                 new Lab("lecke3", LocalDateTime.of(2020, 12, 10, 17, 25)).toString());
 
     }
+    @Test
+    public void testCompleteNow(){
+        Lab l= new Lab("lecke1");
+        l.complete();
+        assertEquals(true, l.isCompleted());
+
+        assertTrue(l.getCompletedAt().plusSeconds(1).isAfter(LocalDateTime.now()));  ///
+        assertTrue(l.getCompletedAt().minusSeconds(1).isBefore(LocalDateTime.now()));
+
+    }
 
 }
