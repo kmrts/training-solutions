@@ -16,6 +16,7 @@ class FibCalculatorTest {
         assertEquals(10, fibc.sumEvens(11));
         assertEquals(44, fibc.sumEvens(40));
         assertEquals(188, fibc.sumEvens(151));
+        assertEquals(60696, fibc.sumEvens(190000));
     }
 
 }
