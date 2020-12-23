@@ -19,4 +19,11 @@ class FibCalculatorTest {
         assertEquals(60696, fibc.sumEvens(190000));
     }
 
+    @Test
+    public void testTillThous(){
+        FibCalculator f= new FibCalculator();
+
+        assertEquals(1_089_154, f.sumEvensTillThous());
+    }
+
 }

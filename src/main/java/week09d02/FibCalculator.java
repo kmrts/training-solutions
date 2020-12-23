@@ -21,6 +21,24 @@ public class FibCalculator {
         }
         return sumFib;
     }
+
+    public long sumEvensTillThous(){
+        long sumFib= 0;
+        int fib0= 1;
+        int fib1= 2;
+        int nextFib;
+        while(sumFib <=1_000_000){
+            System.out.print(fib1 +", ");
+            if(fib1%2==0){
+                sumFib+= fib1;
+            }
+            nextFib= fib0+ fib1;
+            fib0= fib1;
+            fib1= nextFib;
+
+        }
+        return sumFib;
+    }
     //1,1 2 3 5 8 13 21 34 55 89 144
 
 
