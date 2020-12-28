@@ -30,7 +30,9 @@ public class Van extends Car{
 
     @Override
     public String toString() {  //Van{cargoWeight=1222, numberOfPassenger=4, vehicleWeight=1200}
-        return "Van{cargoWeight="+ cargoWeight +", numberOfPassenger="+ getNumberPassenger()
-                +", vehicleWeight="+ getVehicleWeight()+ "}";
+        return String.format("Van{cargoWeight=%d, numberOfPassenger=%d, vehicleWeight=%d}",
+                cargoWeight, getNumberPassenger(), getVehicleWeight());
+//        return "Van{cargoWeight="+ cargoWeight +", numberOfPassenger="+ getNumberPassenger()
+//                +", vehicleWeight="+ getVehicleWeight()+ "}";
     }
 }
