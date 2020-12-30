@@ -14,10 +14,14 @@ public class CanCarryGoodsBehaviour implements CanCarryGoods {
     private int cargoWeight;
     private int maxCargoWeight;
 
+    public CanCarryGoodsBehaviour(int maxCargoWeight) {     ////
+        this.maxCargoWeight = maxCargoWeight;
+    }
+
     @Override
     public int loadCargo(int weight) {
-        cargoWeight= (weight> maxCargoWeight) ? maxCargoWeight : weight;
-        return weight- cargoWeight;
+        cargoWeight = (weight > maxCargoWeight) ? maxCargoWeight : weight;
+        return (weight > maxCargoWeight) ? weight - cargoWeight : 0;
     }
 
     @Override
@@ -25,20 +29,6 @@ public class CanCarryGoodsBehaviour implements CanCarryGoods {
         return cargoWeight;
     }
 
-    //
-    //A Liner osztály implementálja a Ship és a CanCarryPassengers interfészt, és legyen egy CanCarryPassengers típusú attribútuma.
-    //
-    //A CargoShip osztály implementálja a Ship és a CanCarryGoods interfészt, és legyen egy CanCarryGoods típusú attribútuma.
-    //
-    //A FerryBoat osztály implementálja a Ship, CanCarryGoods, CanCarryPassengers interfészt, és legyen mindkét típusú attribútuma.
-    //
-    //Mindhárom osztálynak legyen olyan konstruktora, mely elvárja a CanXxxBehaviour osztályok konstruktorában elvárt adatokat.
-    //
-    //Minden szükséges (interfész által kikényszerített) metódust úgy implementálj, hogy delegáld a kérést a megfelelő attribútum megfelelő metódusának.
-    //
-    //Azaz pl. a FerryBoat osztály loadCargo() metódusa hívja a CanCarryGoods loadCargo() metódusát.
-    //
-    //Készíts egy Fleet osztályt, melynek van egy List<Ship> attribútuma, mely a hajókat tartalmazza. A loadShip() metódusa végigmegy a listán, és sorban feltölti a hajókat a személyekkel és terhekkel. A maradék személyeket és terheket (melyek nem fértek el) a waitingPersons és waitingCargo attribútumokban tárolja el. Ez utóbbiakhoz generálj getter metódusokat is.
 }
 
 
