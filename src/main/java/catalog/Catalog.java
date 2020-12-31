@@ -12,7 +12,12 @@ public class Catalog {
     //    Az összhosszt az audio típusúaknál (getFullLength())
     //    Az átlag oldalszámot egy bizonyos oldalszám felett (averagePageNumberOver())
     //    Keresni lehet egy SearchCriteria alapján (lásd lejjebb) (findByCriteria())
-    static List<CatalogItem> catalogItems= new ArrayList<>();  //static a private helyett: testben catalog.catalogItem
+    public List<CatalogItem> catalogItems= new ArrayList<>();
+
+    //private, test-ben catalog.catalogItems inaktív(piros)
+    //static, test egyenként jó, együtt nem
+    //public, ok
+
 
     public void addItem(CatalogItem item){
         catalogItems.add(item);
