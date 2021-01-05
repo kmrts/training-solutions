@@ -20,7 +20,7 @@ class SantaClausTest {
 
         assertEquals("Abi", peo.get(0).getName());
         assertEquals(3, peo.size());
-        assertEquals(null, peo.get(1).getPresent());
+        assertNotEquals(Present.TOY, peo.get(1).getPresent());  //
         assertEquals(14, peo.get(2).getAge());
     }
 

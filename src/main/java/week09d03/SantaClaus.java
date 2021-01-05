@@ -1,5 +1,6 @@
 package week09d03;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SantaClaus {
@@ -13,9 +14,9 @@ public class SantaClaus {
         this.people = people;
     }
 
-//    public List<Person> getPeople() {
-//        return people;
-//    }
+    public List<Person> getPeople() {
+        return new ArrayList<>(people);  //másolatot adjon át
+    }
 
     public void getThroughChimneys(){
         for(Person p: people){

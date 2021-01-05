@@ -37,6 +37,8 @@ public class Person {
         Random r = new Random();
         if (age <= 14) {
             present = Present.values()[r.nextInt(4)];
+        }else{
+            present= Present.values()[r.nextInt(3)+1];//1-3 lehet, 0 nem
         }
 
     }
