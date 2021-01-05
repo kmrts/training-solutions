@@ -20,7 +20,7 @@ public class MaxTravel {
         }
         int maxStNum= Collections.max(stationList);
         if(maxStNum>29){
-            throw new IllegalArgumentException("station numbers must be 0- 30");
+            throw new IllegalArgumentException("station numbers must be 0- 29");
         }
         int[] stnArray= new int[maxStNum+1]; //0-s is van
         for(int station: stationList){
