@@ -44,8 +44,8 @@ A findSkillLevelByName() a skill neve alapján visszaadja annak szintjét.
         for(String skill: skills){
             int bracket= skill.indexOf("(");
             String name= skill.substring(0, bracket-1);
-            String level= skill.substring(bracket+1, skill.length());
-            this.skills.add(new Skill(name, ""+level));
+            String level= skill.substring(bracket+1, bracket+2);
+            this.skills.add(new Skill(name, Integer.parseInt(level)));
         }
 
     }
