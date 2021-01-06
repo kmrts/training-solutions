@@ -30,7 +30,7 @@ A findSkillLevelByName() a skill neve alapján visszaadja annak szintjét.
     public int findSkillLevelByName(String skillName){
         int result= 0;
         for(Skill skill: skills){
-            if(skill.getName()== skillName){
+            if(skill.getName().equals(skillName)){ //
                 result= skill.getLevel();
                 break;
             }
