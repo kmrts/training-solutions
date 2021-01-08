@@ -35,7 +35,7 @@ public class CvTest {
     @Test
     public void testNotFoundSkill() {
         Cv cv1 = new Cv("John Doe");
-        assertThrows(SkillNotFoundException.class,
+        assertThrows(IllegalArgumentException.class,    // SkillNotFoundException
                 () -> cv1.findSkillLevelByName("programming"));
 
     }

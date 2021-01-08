@@ -35,9 +35,9 @@ A findSkillLevelByName() a skill neve alapján visszaadja annak szintjét.
                 break;
             }
         }
-//        if(result==0){
-//            throw new SkillNotFoundException("skill not found");
-//        }
+        if(result==0){
+            throw new IllegalArgumentException("skill not found");
+        }
         return result;
     }
     public void addSkills(String... skills){
