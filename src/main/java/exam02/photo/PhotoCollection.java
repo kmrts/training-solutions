@@ -39,13 +39,16 @@ Tartsd be az elnevezési konvenciókat! A megoldásban csak foreach-eket haszná
     }
     public int numberOfStars(){
         int sum= 0;
-        for(Photo photo: photos){
-            if(photo.getQuality()== Quality.ONE_STAR){
-                sum++;
-            }
-            if(photo.getQuality()== Quality.TWO_STAR){
-                sum += 2;
-            }
+//        for(Photo photo: photos){
+//            if(photo.getQuality()== Quality.ONE_STAR){
+//                sum++;
+//            }
+//            if(photo.getQuality()== Quality.TWO_STAR){
+//                sum += 2;
+//            }
+//        }
+        for(Photo ph: photos){
+            sum+= ph.getQuality().getValue();
         }
         return sum;
     }
