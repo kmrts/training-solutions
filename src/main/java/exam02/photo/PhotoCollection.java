@@ -18,7 +18,8 @@ Tartsd be az elnevezési konvenciókat! A megoldásban csak foreach-eket haszná
     private List<Photo> photos= new ArrayList<>();
 
     public List<Photo> getPhotos() {
-        return photos;
+//        return photos;
+        return new ArrayList<>(photos);
     }
 
     public void addPhoto(String... names){
