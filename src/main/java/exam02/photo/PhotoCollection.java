@@ -35,7 +35,7 @@ Tartsd be az elnevezési konvenciókat! A megoldásban csak foreach-eket haszná
             }
 
         }
-        throw new IllegalArgumentException("No found");
+        throw new PhotoNotFoundException("No found");
     }
     public int numberOfStars(){
         int sum= 0;
