@@ -36,5 +36,6 @@ public class TrackPoint {
 
         return Math.sqrt(distance);
 
+    // http://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi
     }
 }
