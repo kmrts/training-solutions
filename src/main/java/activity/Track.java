@@ -79,4 +79,15 @@ public class Track {
 
         return lati * longi;
     }
+    public double getRectangleArea2(){
+        Coordinate ba= findMinimumCoordinate();
+        Coordinate ja= new Coordinate(findMinimumCoordinate().getLatitude(), findMaximumCoordinate().getLongitude()); //ja
+        double latDist= new TrackPoint(ba, 0).getDistanceFrom(new TrackPoint(ja, 0)) /1000;
+
+        Coordinate jf= findMaximumCoordinate();
+        Coordinate bf= new Coordinate(findMaximumCoordinate().getLatitude(), findMinimumCoordinate().getLongitude()); //bf
+        double lonDist= new TrackPoint(ba, 0).getDistanceFrom(new TrackPoint(bf, 0)) /1000;
+
+        return latDist* lonDist /1000; //1000 km2
+    }
 }
