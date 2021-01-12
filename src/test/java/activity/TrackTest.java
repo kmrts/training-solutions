@@ -78,22 +78,20 @@ public class TrackTest {
 
         assertEquals(2318.4118, track.getRectangleArea());
     }
-    @Test
-    public void testGetRectangleArea2(){
-        track.addTrackPoint(new TrackPoint(new Coordinate(12.5, 34.89), 123));
-        track.addTrackPoint(new TrackPoint(new Coordinate(-12.5, 45.7), 124));
-        track.addTrackPoint(new TrackPoint(new Coordinate(13.7, -6.0), 0));
-        track.addTrackPoint(new TrackPoint(new Coordinate(3.67, -42.789), 200));
-
-        System.out.println(track.getRectangleArea2()+ " e km2");
-
-        TrackPoint lowerLeft= new TrackPoint(new Coordinate(-12.5, -42.789), 0);
-        TrackPoint lowerRight= new TrackPoint(new Coordinate(-12.5, 45.7), 0); //lR
-        TrackPoint upperLeft= new TrackPoint(new Coordinate(13.7, -42.789), 0);//uL
-        TrackPoint upperRight= new TrackPoint(new Coordinate(13.7, 45.7), 0);
-        System.out.println(lowerLeft.getDistanceFrom(lowerRight) +" m *");
-        System.out.println(lowerLeft.getDistanceFrom(upperLeft) +" m");
-        System.out.println(lowerLeft.getDistanceFrom(lowerRight)/1000* lowerLeft.getDistanceFrom(upperLeft)/1000 /1000 +" e km2");
-
-    }
+//    @Test
+//    public void testGetRectangleArea2(){
+//        track.addTrackPoint(new TrackPoint(new Coordinate(12.5, 34.89), 123));
+//        track.addTrackPoint(new TrackPoint(new Coordinate(-12.5, 45.7), 124));
+//        track.addTrackPoint(new TrackPoint(new Coordinate(13.7, -6.0), 0));
+//        track.addTrackPoint(new TrackPoint(new Coordinate(3.67, -42.789), 200));
+//
+//        TrackPoint lowerLeft= new TrackPoint(new Coordinate(-12.5, -42.789), 0);
+//        TrackPoint lowerRight= new TrackPoint(new Coordinate(-12.5, 45.7), 0);
+//        TrackPoint upperLeft= new TrackPoint(new Coordinate(13.7, -42.789), 0);
+//        TrackPoint upperRight= new TrackPoint(new Coordinate(13.7, 45.7), 0);
+//
+//        double alt= lowerLeft.getDistanceFrom(lowerRight)/1000* lowerLeft.getDistanceFrom(upperLeft)/1000 /1000;
+//        System.out.println(alt +" e km2");
+//        assertTrue(track.getRectangleArea2()> alt-0.0005 && track.getRectangleArea2()< alt+0.0005);
+//    }
 }
