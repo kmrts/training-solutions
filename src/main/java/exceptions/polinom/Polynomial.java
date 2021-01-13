@@ -13,30 +13,28 @@ public class Polynomial {
     double[] coefficients;
 
     public Polynomial(double[] coefficients) {
-//        try{
-//            this.coefficients = coefficients;
-//        }
-//        catch (NullPointerException npe){
-//            throw new NullPointerException("coefficients is null");
-//        }
-        if(coefficients==null){
+
+        if (coefficients == null) {
             throw new NullPointerException("coefficients is null");
         }
         this.coefficients = coefficients;
 
     }
-    public Polynomial(String... coefficients) {
-        try{
-            int i= 0;
-            for(String s: coefficients){
-                this.coefficients[i] = Integer.parseInt(s);
-                i++;
-            }
-        }catch (IllegalArgumentException iae){
-            throw new IllegalArgumentException("Illegal argument", iae);
-        }catch (NullPointerException npe){
-            throw npe;
+
+    public Polynomial(String[] coefficientStrs) {
+
+        if (coefficientStrs == null) {
+            throw new NullPointerException("coefficientStrs is null");
         }
+        try {
+            this.coefficients = new double[coefficientStrs.length]; //
+            for (int i = 0; i < coefficientStrs.length; i++) {
+                this.coefficients[i] = Double.parseDouble(coefficientStrs[i]); //Integer.parseInt(coefficientStrs[i])
+            }
+        } catch (NumberFormatException iae) { //IllegalArgumentException iae //ex
+            throw new IllegalArgumentException("Illegal coefficients, not a number", iae);
+        }
+
 
     }
 
@@ -44,9 +42,18 @@ public class Polynomial {
         return coefficients;
     }
 
-    public String evaluate(double x){
-//        for()
-        return null;
+    public double evaluate(double x) {
+        double sum=0;
+        double sub=0;
+
+            for(int i=0; i< coefficients.length; i++){
+                sub= coefficients[i];
+                for(int j=0; j<coefficients.length-(i+1); j++ ){
+                    sub *= x;
+                }
+                sum+= sub;
+            }
+        return sum;
 
     }
 }
