@@ -16,6 +16,9 @@ class CourierTest {
         assertEquals(11, c.getRides().get(1).getWay());
         assertThrows(IllegalArgumentException.class, ()-> c.addRide(new Ride(1, 3, 10) ));
         assertThrows(IllegalArgumentException.class, ()-> c.addRide(new Ride(2, 1, 10) ));
+
+        assertThrows(IllegalArgumentException.class, ()-> c.addRide(new Ride(2, 1, 9) ));
+        assertThrows(IllegalArgumentException.class, ()-> c.addRide(new Ride(3, 2, 19) ));
         //1 2 11 2 1 10 4 1 19
 
     }

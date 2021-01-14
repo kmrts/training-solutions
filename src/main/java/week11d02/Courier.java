@@ -26,6 +26,12 @@ Készíts egy metódust, ami visszad egy napot amikor a futár nem dolgozott. Ha
                     (rides.get(lastIndex).getDay() == newRide.getDay() && rides.get(lastIndex).getNumber() >= newRide.getNumber())) {
                 throw new IllegalArgumentException("There was an earlier");
             }
+            if(rides.get(lastIndex).getDay()== newRide.getDay() && rides.get(lastIndex).getNumber() +1 != newRide.getNumber()){
+                throw new IllegalArgumentException(String.format( "The next ride's number should be %d", rides.get(lastIndex).getNumber() +1 ));
+            }
+            if(rides.get(lastIndex).getDay() +1== newRide.getDay() && newRide.getNumber() != 1){
+                throw new IllegalArgumentException("1st ride of day must be number 1");  // e két kieg, de 1. elemnél így nem vizsgál
+            }
         }
         rides.add(newRide);
     }
