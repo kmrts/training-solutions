@@ -22,13 +22,45 @@ valamint legyen felüldefiniálva a toString-je úgy, hogy hh:mm: kurzusnév ala
     private int minute;
 
     public SimpleTime(int hour, int minute) {
+        if (hour < 0 || hour > 23) {
+            throw new InvalidTimeException("Hour is invalid (0-23)");
+        }
         this.hour = hour;
+        if (minute < 0 || minute > 59) {
+            throw new InvalidTimeException("Minute is invalid (0-59)");
+        }
         this.minute = minute;
     }
 
     public SimpleTime(String hourminute) {
-        this.hour = Integer.parseInt(hourminute.substring(0, 2) );
-        this.minute = Integer.parseInt(hourminute.substring(3) );
+        if (hourminute == null) {
+            throw new InvalidTimeException("Time is null");
+        }
+        if (!isValidFormat(hourminute)) {
+            throw new InvalidTimeException("Time is not hh:mm");
+        }
+        int hour;
+        try {
+            hour = Integer.parseInt(hourminute.substring(0, 2));
+        } catch (NumberFormatException ex){        ///
+            throw new InvalidTimeException("Time is not hh:mm");
+        }
+        if (hour < 0 || hour > 23) {
+            throw new InvalidTimeException("Hour is invalid (0-23)");
+        }
+
+        int minute;
+        try {
+            minute = Integer.parseInt(hourminute.substring(3));
+        } catch (NumberFormatException ex){           ///
+            throw new InvalidTimeException("Time is not hh:mm");
+        }
+
+        if (minute < 0 || minute > 59) {
+            throw new InvalidTimeException("Minute is invalid (0-59)");
+        }
+        this.hour = hour;
+        this.minute = minute;
     }
 
     public int getHour() {
@@ -41,6 +73,14 @@ valamint legyen felüldefiniálva a toString-je úgy, hogy hh:mm: kurzusnév ala
 
     @Override
     public String toString() {
-        return String.format("2d%:2d%", hour, minute);
+        return String.format("%02d:%02d", hour, minute); //
+    }
+
+    public boolean isValidFormat(String timeStr) {
+        boolean isValid = false;
+        if (timeStr.length() == 5 && timeStr.charAt(2) == ':') {
+            isValid = true;
+        }
+        return isValid;
     }
 }
