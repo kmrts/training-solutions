@@ -13,29 +13,33 @@ Használd a Files.readString() metódust a fájl beolvasására! A FilesSum oszt
      */
     public double sumNumbers(){
         double sum=0;
-        String cont= null;
+//        String cont= null;
         for (int i = 0; i <100 ; i++) {
             String name= String.format("number%02d.txt", i);
-//            System.out.println(name);
             Path file= Path.of(name);
             if(Files.isRegularFile(file)){
+//                try {
+//                    cont= Files.readString(file);
+//                } catch (IOException e) {
+//                    throw new IllegalStateException("can not read file", e);
+//                }
+//                try{
+//                    sum+= Double.parseDouble(cont);
+//                }catch (NumberFormatException nfe){
+//                    throw new IllegalArgumentException("not a number", nfe);
+//                }
                 try {
-                    cont= Files.readString(file);
-                } catch (IOException e) {
-                    throw new IllegalStateException("can not read file", e);
-                }
-                try{
-                    sum+= Integer.parseInt(cont);
-                }catch (NumberFormatException nfe){
-                    throw new IllegalArgumentException("not a number", nfe);
+                    sum+= Double.parseDouble(Files.readString(file));
+                } catch (IOException | NumberFormatException  e) {
+                    throw new IllegalArgumentException("", e);
                 }
             }
         }
         return sum;
     }
 
-//    public static void main(String[] args) {
-//        FilesSum fs= new FilesSum();
-//        fs.sumNumbers();
-//    }
+    public static void main(String[] args) {
+        FilesSum fs= new FilesSum();
+        System.out.println(fs.sumNumbers() );
+    }
 }
