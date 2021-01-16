@@ -16,18 +16,26 @@ Használd a Files.readString() metódust a fájl beolvasására! A FilesSum oszt
         String cont= null;
         for (int i = 0; i <100 ; i++) {
             String name= String.format("number%02d.txt", i);
+//            System.out.println(name);
             Path file= Path.of(name);
             if(Files.isRegularFile(file)){
-//                String cont= null;
                 try {
                     cont= Files.readString(file);
                 } catch (IOException e) {
                     throw new IllegalStateException("can not read file", e);
                 }
-                sum+= Integer.parseInt(cont);
-
+                try{
+                    sum+= Integer.parseInt(cont);
+                }catch (NumberFormatException nfe){
+                    throw new IllegalArgumentException("not a number", nfe);
+                }
             }
         }
         return sum;
     }
+
+//    public static void main(String[] args) {
+//        FilesSum fs= new FilesSum();
+//        fs.sumNumbers();
+//    }
 }
