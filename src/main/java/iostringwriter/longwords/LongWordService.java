@@ -1,6 +1,7 @@
 package iostringwriter.longwords;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
@@ -12,23 +13,20 @@ public class LongWordService {
     Majd írj egy metódust, ami csak egy listát vár, és az előzőleg megírt metódust használja
     a paraéterül kapott listával és egy példányosított StringWriter-rel!
      */
-    public String listToStringWriter(Writer w, List<String> aList) {
-        try (StringWriter swr = new StringWriter()) {
-            for (String item : aList) {
-                swr.write(item);
-                swr.write(" " + item.length() + "\n");
-            }
-//            System.out.println(swr.toString());
-            return swr.toString();
-        } catch (IOException ex) {
-            throw new IllegalStateException("cannot write", ex);
+    public void listToStringWriter(Writer w, List<String> aList) {
+        PrintWriter pw= new PrintWriter(w);    //
+        for(String str: aList){
+            pw.print(str +" ");
+            pw.println(str.length());
         }
 
     }
 
     public String writeWithStringWriter(List<String> bList) {
         try (StringWriter swr = new StringWriter()) {
-            return listToStringWriter(swr, bList);
+            listToStringWriter(swr, bList);
+//            System.out.println(swr.toString());
+            return swr.toString();
         } catch (IOException e) {
             throw new IllegalStateException("cannot write", e);
         }
