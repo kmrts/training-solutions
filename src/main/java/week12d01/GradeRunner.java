@@ -14,13 +14,13 @@ public class GradeRunner {
         int[] roundedGrades = new int[grades.length];
         for (int i = 0; i < grades.length; i++) {
             int actual= grades[i];
+            if(actual> 100 || actual< 0){
+                throw new IllegalArgumentException("grade should be 0 -100");
+            }
 
             if(actual >40 && isUp(actual)){
                 actual = actual - actual%5 +5; //actual -= actual%5 +5
             }
-//            else{
-//                actual -= actual%5;
-//            }
             roundedGrades[i]= actual;
         }
         return roundedGrades;
