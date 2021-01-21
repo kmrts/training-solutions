@@ -53,7 +53,7 @@ public class SocialNetwork {
 
     private Member findByName(String name) {
         for (Member mem : members) {
-            if (mem.getName() == name) {
+            if (mem.getName().equals(name)) {
                 return mem;
             }
         }

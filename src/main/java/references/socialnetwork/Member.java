@@ -1,7 +1,5 @@
 package references.socialnetwork;
 
-import week02.project1.MeetingRoom;
-
 import java.util.ArrayList;
 import java.util.List;
 
