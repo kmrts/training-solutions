@@ -1,4 +1,4 @@
-package initalizer;
+package initializer;
 
 public class Rate {
     //A Rate osztály az egyes valutákhoz (Currency enum) tartozó átváltási faktorokat tárolja, ezek listájából dolgozik
