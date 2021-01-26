@@ -14,11 +14,11 @@ Hibakezelés
     Ha a könyvtárat reprezentáló kollekció null, dobjon NullPointerException kivételt
     Ha a könyvtárat reprezentáló kollekció üres, dobjon IllegalArgumentException kivételt
      */
-    private List bookList= new ArrayList();
-
-    public List getBookList() {
-        return new ArrayList(bookList);
-    }
+//    private List bookList= new ArrayList();
+//
+//    public List getBookList() {
+//        return new ArrayList(bookList);
+//    }
 
     public Book getFirstBook(List bookList){
         if(bookList== null){
