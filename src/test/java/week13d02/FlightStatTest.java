@@ -51,7 +51,7 @@ class FlightStatTest {
         FlightStat fs= new FlightStat();
         fs.loadFlights(Path.of("cities.txt"));
 
-        assertEquals("Paris", fs.earlyestFlight().getCity());
-        assertEquals("JE9763", fs.earlyestFlight().getNumber());
+        assertEquals("Zurich", fs.earliestDepFlight().getCity());
+        assertEquals("FG3210", fs.earliestDepFlight().getNumber());
     }
 }
