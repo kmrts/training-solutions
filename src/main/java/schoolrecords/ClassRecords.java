@@ -1,4 +1,4 @@
-package week04.schoolrecords;
+package schoolrecords;
 
 import java.util.ArrayList;
 import java.util.List;
