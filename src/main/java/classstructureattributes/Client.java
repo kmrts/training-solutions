@@ -1,4 +1,4 @@
-package classstructureio;
+package classstructureattributes;
 
 public class Client {
     String name;
