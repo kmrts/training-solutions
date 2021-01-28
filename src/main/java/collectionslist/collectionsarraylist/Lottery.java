@@ -25,6 +25,7 @@ Tippek
 Nézz utána, hogyan lehet List típusok esetén az elemeket rendezni (mi ennek a feltétele?), a rendezettséget megszüntetni.
      */
     public List<Integer> selectWinningNumbers(int lotteryType, int ballCount){
+        return null;
 
     }
 
