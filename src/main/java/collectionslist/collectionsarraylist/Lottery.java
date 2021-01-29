@@ -1,6 +1,9 @@
 package collectionslist.collectionsarraylist;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Lottery {
     /*
@@ -24,9 +27,39 @@ public List<Integer> selectWinningNumbers(int lotteryType, int ballCount)
 Tippek
 Nézz utána, hogyan lehet List típusok esetén az elemeket rendezni (mi ennek a feltétele?), a rendezettséget megszüntetni.
      */
-    public List<Integer> selectWinningNumbers(int lotteryType, int ballCount){
-        return null;
+    public List<Integer> selectWinningNumbers(int lotteryType, int ballCount) {
+        if (lotteryType >= ballCount) {
+            throw new IllegalArgumentException("Balls must be more then the winning numbers!");
+        }
+        List<Integer> numList = new ArrayList<>();
+        for (int i = 1; i <= ballCount; i++) {
+            numList.add(i);
+        }
+        Collections.shuffle(numList);
 
+        List<Integer> winnerNums = new ArrayList<>();
+        Random random = new Random();
+
+        int rest = lotteryType;
+        while (rest != 0) {
+            int index = random.nextInt(ballCount); // 0- (ballCount-1)
+            if (!winnerNums.contains(numList.get(index))) {
+                winnerNums.add(numList.get(index));
+                rest--;
+            }
+        }
+        Collections.sort(winnerNums);
+        return winnerNums;
+
+    }
+
+    //    public void makeBalls(){
+//
+//    }
+    public static void main(String[] args) {
+        Lottery lo= new Lottery();
+
+        System.out.println( lo.selectWinningNumbers(5, 90));
     }
 
 }
