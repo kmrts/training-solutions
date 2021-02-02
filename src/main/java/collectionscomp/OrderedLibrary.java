@@ -1,10 +1,7 @@
 package collectionscomp;
 
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class OrderedLibrary {
     /*
@@ -46,7 +43,14 @@ A Comparator objektumot többnyire névtelen osztály példányaként állítjuk
     }
     public List<Book> orderedByAuthor(){
         List<Book> orderedList= new ArrayList<>(libraryBooks);
-        Collections.sort(orderedList, new AuthorComparator());
+//        Collections.sort(orderedList, new AuthorComparator());
+
+        Collections.sort(orderedList, new Comparator<Book>() {
+            @Override
+            public int compare(Book o1, Book o2) {
+                return o1.getAuthor().compareTo(o2.getAuthor());
+            }
+        });
         return orderedList;
     }
     public List<String> orderedByTitleLocale(Locale locale){
