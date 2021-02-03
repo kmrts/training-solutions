@@ -34,7 +34,7 @@ Ha a bináris keresés nem talál könyvet, dobjon IllegalArgumentException-t a 
 //        }
         Arrays.sort(bookArray);
         try {
-            int index = Arrays.binarySearch(bookArray, new Book(1, author, title));
+            int index = Arrays.binarySearch(bookArray, new Book(author, title));
             return bookArray[index];
         }catch (IndexOutOfBoundsException ex){
             throw new IllegalArgumentException("No book found by " + author + " with title " + title, ex);

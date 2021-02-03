@@ -19,6 +19,11 @@ Alapértelmezetten szerző és ezen belül cím alapján rendezi a Book objektum
         this.title = title;
     }
 
+    public Book(String author, String title) {
+        this.author = author;
+        this.title = title;
+    }
+
     public int getId() {
         return id;
     }
