@@ -38,8 +38,9 @@ class ClassNotebookTest {
 
         ClassNotebook cn= new ClassNotebook(Arrays.asList(s1, s2));
         System.out.println(cn);
-        cn.sortNotebook();
-        System.out.println(cn);
+
+        System.out.println(cn.sortNotebook());
+//        System.out.println(cn);
 
     }
 

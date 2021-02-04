@@ -10,24 +10,15 @@ public class ClassNotebook {
     }
 
     public List<Student> sortNotebook(){
-//        Set<Student> ordered= new TreeSet<>();
-////        for(Student st: students){
-////            ordered.add(st);
-////
-////        }
-//        ordered.addAll(students);
-//        return ordered;
 
-        List<Student> ordered= new ArrayList<>();
 
-        students.sort(new Comparator<Student>() {
-            @Override
-            public int compare(Student o1, Student o2) {
-                return o1.hashCode()- o2.hashCode();
-//                return o1 - o2;
-            }
-        });
-        return students;
+//        Collections.sort(students);
+//        return students;
+
+        List<Student> result= new ArrayList<>(students);
+
+        Collections.sort(result);
+        return result;
 
     }
 
