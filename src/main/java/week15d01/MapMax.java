@@ -9,18 +9,17 @@ public class MapMax {
     Döntsük el, hogy a kapott pontok küzül, hol van a függvénynek maximum helye és ott mennyi az értéke.
      */
     public Map.Entry maxOfMap(Map<Integer, Integer> graph){
-        int max= Integer.MIN_VALUE;
-        Map.Entry maxEntry= null;
-//        for(int y: graph.values()){
-//            if( y> max){
-//                max= y;
-//                maxEntry= graph.g
-//            }
-//        }
+//        int max= Integer.MIN_VALUE;
+//        Map.Entry maxEntry= null;
+
+        Map.Entry<Integer, Integer> maxEntry= null;
         for(Map.Entry<Integer, Integer> entry: graph.entrySet()){ // <Integer, Integer>
-            int actual= entry.getValue(); //  (Integer)entry.getValue();
-            if(actual > max){
-                max= actual;
+//            int actual= entry.getValue(); //  (Integer)entry.getValue();
+//            if(actual > max){
+//                max= actual;
+//                maxEntry= entry;
+//            }
+            if(maxEntry==null || entry.getValue()> maxEntry.getValue()){
                 maxEntry= entry;
             }
         }
