@@ -49,14 +49,6 @@ Ez a statikus metódus hívja a copy konstruktort.
         return to;
     }
 
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
     public void setFrom(LocalDateTime from) {
         this.from = from;
     }
@@ -69,8 +61,9 @@ Ez a statikus metódus hívja a copy konstruktort.
         TimeSheetItem tsi= new TimeSheetItem(pre);
         tsi.setFrom(LocalDateTime.of(newDate.getYear(), newDate.getMonth(), newDate.getDayOfMonth(),
                 tsi.getFrom().getHour(), tsi.getFrom().getMinute(), tsi.getFrom().getSecond()));
-        tsi.setTo(LocalDateTime.of(newDate.getYear(), newDate.getMonth(), newDate.getDayOfMonth(),
-                tsi.getTo().getHour(), tsi.getTo().getMinute(), tsi.getTo().getSecond()));
+//        tsi.setTo(LocalDateTime.of(newDate.getYear(), newDate.getMonth(), newDate.getDayOfMonth(),
+//                tsi.getTo().getHour(), tsi.getTo().getMinute(), tsi.getTo().getSecond()));
+        tsi.to= LocalDateTime.of(newDate, tsi.to.toLocalTime());
 
         return tsi;
     }
