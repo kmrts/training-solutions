@@ -10,18 +10,20 @@ public class MapMax {
      */
     public Map.Entry maxOfMap(Map<Integer, Integer> graph){
         int max= Integer.MIN_VALUE;
-        Map.Entry maxEntry;
+        Map.Entry maxEntry= null;
 //        for(int y: graph.values()){
 //            if( y> max){
 //                max= y;
 //                maxEntry= graph.g
 //            }
 //        }
-        for(Map.Entry entry: graph.entrySet()){
-            if(entry.getValue() > max){
-
+        for(Map.Entry<Integer, Integer> entry: graph.entrySet()){ // <Integer, Integer>
+            int actual= entry.getValue(); //  (Integer)entry.getValue();
+            if(actual > max){
+                max= actual;
+                maxEntry= entry;
             }
         }
-        return graph.(max);
+        return maxEntry;
     }
 }
