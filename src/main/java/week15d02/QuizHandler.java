@@ -99,15 +99,17 @@ Melyik evben adtak ki Angliaban a Magna Chartat?
                 maxSum= actual;
                 result= entry.getKey();
             }
+            System.out.print(entry.getKey()+ " " +actual+ " ");
         }
         return result;
     }
     private int sumPoint(String theme, List<Quiz> quizList){
         int sum= 0;
         for(Quiz q: quizList){
-            if(theme.equals( q.getTheme())){
-                sum++;
-            }
+//            if(theme.equals( q.getTheme())){
+//                sum++;
+//            }
+            sum+= Integer.parseInt( q.getPoint());  //try
         }
         return sum;
     }

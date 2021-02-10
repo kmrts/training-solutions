@@ -47,6 +47,8 @@ class QuizHandlerTest {
         System.out.println( resMap.get("vmi"));
 
         System.out.println( resMap.get("magyar"));
+        System.out.println( resMap.get("kemia"));
+
         System.out.println( resMap.get("tortenelem").size());
         System.out.println( resMap.get("matematika").size());
 
@@ -62,6 +64,6 @@ class QuizHandlerTest {
     @Test
     void maxSumPointedTheme() {
 
-        System.out.println(qh.maxSumPointedTheme());
+        assertEquals("matematika", qh.maxSumPointedTheme());
     }
 }
