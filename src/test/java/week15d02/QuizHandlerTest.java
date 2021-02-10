@@ -1,5 +1,6 @@
 package week15d02;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -10,17 +11,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuizHandlerTest {
 
+    QuizHandler qh= new QuizHandler();
+
+    @BeforeEach
+    void init(){
+
+        qh.readQuizItems(Path.of("kerdesek.txt") );
+    }
+
     @Test
     void quesFromTheme() {
-        QuizHandler qh= new QuizHandler();
-        qh.readQuizItems(Path.of("kerdesek.txt") );
+//        QuizHandler qh= new QuizHandler();
+//        qh.readQuizItems(Path.of("kerdesek.txt") );
         System.out.println(qh.quesFromTheme("tortenelem"));
     }
 
     @Test
     void randQuestion() {
-        QuizHandler qh= new QuizHandler();
-        qh.readQuizItems(Path.of("kerdesek.txt") );
+
         Quiz q= qh.randQuestion();
 
         System.out.println(q.getQuestion());
@@ -31,8 +39,6 @@ class QuizHandlerTest {
 
     @Test
     void questionsByThemes() {
-        QuizHandler qh= new QuizHandler();
-        qh.readQuizItems(Path.of("kerdesek.txt") );
 
         Map<String, List<Quiz>> resMap= qh.questionsByThemes();
 
@@ -40,9 +46,9 @@ class QuizHandlerTest {
         System.out.println( resMap.size());
         System.out.println( resMap.get("vmi"));
 
-        System.out.println( qh.questionsByThemes().get("magyar"));
-        System.out.println( qh.questionsByThemes().get("tortenelem").size());
-        System.out.println( qh.questionsByThemes().get("matematika").size());
+        System.out.println( resMap.get("magyar"));
+        System.out.println( resMap.get("tortenelem").size());
+        System.out.println( resMap.get("matematika").size());
 
         assertEquals(18, resMap.get("foldrajz").size());
 
@@ -55,8 +61,6 @@ class QuizHandlerTest {
 
     @Test
     void maxSumPointedTheme() {
-        QuizHandler qh= new QuizHandler();
-        qh.readQuizItems(Path.of("kerdesek.txt") );
 
         System.out.println(qh.maxSumPointedTheme());
     }
