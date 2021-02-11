@@ -2,26 +2,26 @@ package week15d04;
 
 public class Case {
     private String week;
-    private int casePerWeek;
+    private int caseOfWeek;
 
-    public Case(String week, int casePerWeek) {
+    public Case(String week, int caseOfWeek) {
         this.week = week;
-        this.casePerWeek = casePerWeek;
+        this.caseOfWeek = caseOfWeek;
     }
 
     public String getWeek() {
         return week;
     }
 
-    public int getCasePerWeek() {
-        return casePerWeek;
+    public int getCaseOfWeek() {
+        return caseOfWeek;
     }
 
     @Override
     public String toString() {
         return "Case{" +
                 "week='" + week + '\'' +
-                ", casePerWeek=" + casePerWeek +
+                ", caseOfWeek=" + caseOfWeek +
                 '}';
     }
 }

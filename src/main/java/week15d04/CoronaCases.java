@@ -12,25 +12,36 @@ public class CoronaCases {
     Melyik három héten volt Magyarországon a legtöbb esetszám?
      */
     private List<Case> caseList= new ArrayList<>();
+    List<Case> three= new ArrayList<>();
+
+    private String country;
 
     private final static int ARR_SIZE= 10;
 
+    public CoronaCases(String country) {
+        this.country = country;
+    }
+
     public List<Case> getCaseList() {
         return caseList;
+    }
+
+    public List<Case> getThree() {
+        return three;
     }
 
     public void readData(Path path){
         try (BufferedReader brd = Files.newBufferedReader(path)) {
             String line= brd.readLine(); //1. sor
             while( (line= brd.readLine()) != null){
-                makeAndAddCase(line, "Hungary");
+                makeAndAddCase(line);
             }
 
         }catch (IOException e){
             throw new IllegalArgumentException("cannot read file", e);
         }
     }
-    private void makeAndAddCase(String line, String country){
+    private void makeAndAddCase(String line){
         String[] spl= line.split(",");
 
 //        if(spl.length < ARR_SIZE){
@@ -41,12 +52,12 @@ public class CoronaCases {
         }
 
     }
-    public List<Case> sortAndThreeMax(){
+    public String sortAndThreeMax(){
         List<Case> sorted= new ArrayList<>(caseList);
         Collections.sort(sorted, new Comparator<Case>() {
             @Override
             public int compare(Case o1, Case o2) {
-                return o1.getCasePerWeek() - o2.getCasePerWeek();
+                return o1.getCaseOfWeek() - o2.getCaseOfWeek();
             }
         });
 //        System.out.println("sorted "+ sorted);
@@ -54,12 +65,18 @@ public class CoronaCases {
         return threeMax(sorted);
 
     }
-    private List<Case> threeMax(List<Case> list){
-        List<Case> three= new ArrayList<>();
+    private String threeMax(List<Case> list){
+        StringBuilder sb= new StringBuilder(country+ ": a három max eset: ");
+
         for(int i= 1; i<=3; i++ ){
-            three.add(list.get(list.size()- i));
+            Case actual= list.get(list.size()- i);
+            three.add(actual);
+            sb.append(String.format("a %s héten %d eset, ", actual.getWeek(),
+                    actual.getCaseOfWeek()));
         }
-        return three;
+        sb.delete(sb.length()-2, sb.length()).append(".\n");
+        return sb.toString();
+//        return three;
     }
 
 }
