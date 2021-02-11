@@ -32,15 +32,20 @@ Tároljunk egy List<Post> objektumot a PostFinder osztályban, melyet konstrukto
     }
 
     public List<Post> findPostsFor(String user) {
-        List<Post> foundedPosts= new ArrayList<>();
+        List<Post> foundedPosts = new ArrayList<>();
 
         for (Post p : posts) {
             if (p.getOwner().equals(user) && p.getPublishedAt().isBefore(LocalDate.now())
-                    && !p.getContent().isEmpty() && !p.getTitle().isEmpty()) {
+//                    && !p.getContent().isEmpty() && !p.getTitle().isEmpty()) {
+                    && !isNullOrEmpty(p.getContent()) && !isNullOrEmpty(p.getTitle())) {
 
                 foundedPosts.add(p);
             }
         }
         return foundedPosts;
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
     }
 }
