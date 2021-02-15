@@ -14,7 +14,22 @@ public class CharTypeCounter {
         A space-eket ne vegyük figyelembe! A kis- és nagybetű különbség nem számít!
     Remélem a juniorok is meg tudják oldani, azonban a senoiroknak streammel kell. Bonyi!!!
          */
-    Map<CharType, Integer> chartypeSum= new HashMap<>();
+    private Map<CharType, Integer> chartypeSum= new TreeMap<>();
+
+    private static Set<Character> vowels= new HashSet<>();
+    private static Set<Character> consonants= new HashSet<>();
+
+    static {
+        String vow= "aáeéiíoóöőuúüű";
+        for(char c: vow.toCharArray()){
+            vowels.add(c);
+        }
+
+        String cons= "bcdfghjklmnpqrstvwyz";
+        for(char c: cons.toCharArray()){
+            consonants.add(c);
+        }
+    }
 
     public CharTypeCounter() {
         chartypeSum.put(CharType.VOWEL, 0);
@@ -30,26 +45,11 @@ public class CharTypeCounter {
         String line;
         while ((line = reader.readLine())  != null) {
 
-            countTypes(line.toLowerCase());
+            countAndPutToMap(line.toLowerCase());
         }
     }
 
-    private void countTypes(String line) {
-        Set<Character> vowels= new HashSet<>();
-        String vow= "aáeéiíoóöőuúüű";
-        for(char c: vow.toCharArray()){
-            vowels.add(c);
-        }
-        Set<Character> consonants= new HashSet<>();
-        String cons= "bcdfghjklmnpqrstvwyz";
-        for(char c: cons.toCharArray()){
-            consonants.add(c);
-        }
-
-        countAndPutToMap(line, vowels, consonants);
-    }
-
-    private void countAndPutToMap(String line, Set<Character> vowels, Set<Character> consonants) {
+    private void countAndPutToMap(String line) {
         for(char ch: line.toCharArray()){
             if(vowels.contains(ch)){
                 chartypeSum.put(CharType.VOWEL, chartypeSum.get(CharType.VOWEL) +1);
@@ -65,6 +65,7 @@ public class CharTypeCounter {
         try (BufferedReader reader = Files.newBufferedReader(Path.of("vowcons.txt"))) {
             CharTypeCounter ctc= new CharTypeCounter();
             ctc.readLines(reader);
+
             System.out.println(ctc.getChartypeSum());
         } catch (IOException ioe) {
             throw new IllegalStateException("Can not read file", ioe);
