@@ -46,6 +46,8 @@ public class Cruise {
     public void bookPassenger(Passenger passenger){
         if(boat.getMaxPassengers()> passengers.size()){
             passengers.add(passenger);
+        }else{
+            throw new IllegalArgumentException("Boat is full");
         }
     }
     public double getPriceForPassenger(Passenger passenger){
