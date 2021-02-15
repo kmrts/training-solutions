@@ -31,18 +31,6 @@ public class Cruise {
         return new ArrayList<>(passengers);
     }
 
-    /*
-        Az ár számolása úgy történik, hogy venni kell a hajóhoz tartozó alapárat,
-        és meg kell szorozni az osztályhoz tartozó szorzóval, rendre 3,0, 1,8 és 1,0.
-
-        bookPassenger(): egy foglalás. Ellenőrizni kell, hogy van-e még elég hely.
-        getPriceForPassenger(): visszaadja, hogy mennyibe kerülne a foglalás. Ez a metódus még NEM foglal.
-        findPassengerByName(): foglalás megkeresése név alapján
-        getPassengerNamesOrdered(): visszaadja a foglalást végzők neveit ábécé sorrendben
-        sumAllBookingsCharged(): összegzi, hogy mennyi az összes bevétel
-        countPassengerByClass(): visszaadja, hogy osztályonként mennyien foglaltak
-
-         */
     public void bookPassenger(Passenger passenger){
         if(boat.getMaxPassengers()> passengers.size()){
             passengers.add(passenger);
@@ -51,11 +39,7 @@ public class Cruise {
         }
     }
     public double getPriceForPassenger(Passenger passenger){
-//        double sum= 0.0;
-//        for(Passenger p: passengers){
-//            sum+= basicPrice* p.getCruiseClass().getValue();
-//        }
-//        return sum;
+
         return basicPrice* passenger.getCruiseClass().getValue();
     }
     public Passenger findPassengerByName(String name){
@@ -64,7 +48,7 @@ public class Cruise {
                return p;
            }
        }
-       throw new IllegalArgumentException("Nincs ilyen utas");
+       throw new IllegalArgumentException("No such passenger");
     }
     public List<String> getPassengerNamesOrdered(){
         List<String> names= new ArrayList<>();
