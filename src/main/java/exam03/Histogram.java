@@ -30,12 +30,15 @@ A Histogram osztályba dolgozz, tesztje HistogramTest. Minden sor után legyen s
      */
     public String createHistogram(BufferedReader reader) throws IOException {
         String line;
-        String result= "";
         StringBuilder sb= new StringBuilder();
         while ((line = reader.readLine())  != null) {
+            int times;
+            try{
+                times= Integer.parseInt(line);
+            }catch (NumberFormatException ex){
+                throw new IllegalArgumentException("Not a number", ex);
+            }
 
-            int times= Integer.parseInt(line); //try
-//            String actual;
             for(int i=0; i< times; i++){
                 sb.append("*");
             }
