@@ -1,0 +1,4 @@
+Ebben a szövegben hány magánhangzó, hány mássalhangzó, és egyéb karakter van?
+Számoljuk össze, hogy egy fájlban hány mássalhangzó, hány magánhangzó és hány egyéb karakter van.
+A space-eket ne vegyük figyelembe! A kis- és nagybetű különbség nem számít!
+Remélem a juniorok is meg tudják oldani, azonban a senoiroknak streammel kell. Bonyi!!!
