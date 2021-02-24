@@ -29,33 +29,41 @@ egyéb esetben visszaadja az összes olyan levelet, amiben szerepel a tárgyban 
 
     public List<Mail> findByCriteria(String criteria) {
         List<Mail> result = new ArrayList<>();
-//        String pre= null;
-//        String find= null;
+
         if (criteria.contains(":")) {
             String[] splt = criteria.split(":");
             String pre = splt[0];
             String find = splt[1];
             return findIfFromOrTo(pre, find);
         } else {
-            for (Mail mail : mails) {
-                if (mail.getSubject().contains(criteria) || mail.getMessage().contains(criteria)) {
-                    result.add(mail);
-                }
-            }
-            return result;
+            return findSimple(criteria, result);
         }
 
     }
 
+    private List<Mail> findSimple(String criteria, List<Mail> result) {
+        for (Mail mail : mails) {
+            if (mail.getSubject().contains(criteria) || mail.getMessage().contains(criteria)) {
+                result.add(mail);
+            }
+        }
+        return result;
+    }
+
     private List<Mail> findIfFromOrTo(String pre, String find) {
-//        if(pre.equals("from")){
-//
-//        }
+
         List<Mail> result = new ArrayList<>();
         for (Mail mail : mails) {
             if ("from".equals(pre)) {
                 if (mail.getFrom().getName().equals(find) || mail.getFrom().getEmail().equals(find)) {
                     result.add(mail);
+                }
+            }
+            if("to".equals(pre)){
+                for(Contact con: mail.getTo()){
+                    if(con.getName().equals(find) || con.getEmail().equals(find)){
+                        result.add(mail);
+                    }
                 }
             }
         }

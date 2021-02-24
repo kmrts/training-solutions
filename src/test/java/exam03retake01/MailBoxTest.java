@@ -52,12 +52,12 @@ public class MailBoxTest {
         assertEquals(3, mails.size());
     }
 
-//    @Test
-//    void findTo() {
-//        List<Mail> mails =  mailBox.findByCriteria("to:Jack Doe");
-//        assertEquals(2, mails.size());
-//
-//    }
+    @Test
+    void findTo() {
+        List<Mail> mails =  mailBox.findByCriteria("to:Jack Doe");
+        assertEquals(2, mails.size());
+
+    }
 
     @Test
     void findSubject() {
