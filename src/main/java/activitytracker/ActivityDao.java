@@ -16,6 +16,9 @@ List<Activity> listActivities()
 Töröld ki az adatbázisban a táblát, és használd a Flyway-t, hogy hozza létre a sémát!
 
 Írj egy JUnit integrációs tesztet az ActivityDao tesztelésére!
+
+Generált azonosító lekérdezése
+Módosítsd úgy a void saveActivity(Activity) metódust, hogy Activity-t adjon vissza, aminek már fel van töltve az id mezője!
      */
     private DataSource dataSource;
 
@@ -23,25 +26,42 @@ Töröld ki az adatbázisban a táblát, és használd a Flyway-t, hogy hozza l�
         this.dataSource = dataSource;
     }
 
-    public void saveActivity(Activity activity) {
+    public Activity saveActivity(Activity activity) {
         try (
                 Connection conn = dataSource.getConnection();
                 PreparedStatement stmt =
                         conn.prepareStatement("insert into activities(start_time, activity_desc, activity_type) " +
-                                "values (?, ?, ?)")
+                                "values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         ) {
             insertActivity(stmt, activity);
+            int id= executeAndGetGeneratedKey(stmt);
+            return findActivityById(id);
+
         } catch (SQLException se) {
             throw new IllegalStateException("Cannot insert", se);
         }
 
     }
 
-    private static void insertActivity(PreparedStatement stmt, Activity ac) throws SQLException {
+    private void insertActivity(PreparedStatement stmt, Activity ac) throws SQLException {  //static
         stmt.setTimestamp(1, Timestamp.valueOf(ac.getStartTime()));
         stmt.setString(2, ac.getDesc());
         stmt.setString(3, ac.getType().toString());
         stmt.executeUpdate();
+    }
+
+    private int executeAndGetGeneratedKey(PreparedStatement stmt) {
+        try (
+                ResultSet rs = stmt.getGeneratedKeys();
+        ) {
+            if (rs.next()) {
+                return rs.getInt(1);    //getLong
+            } else {
+                throw new SQLException("No key has generated");
+            }
+        } catch (SQLException sqle) {
+            throw new IllegalArgumentException("Error by insert", sqle);
+        }
     }
 
     public Activity findActivityById(int id) {

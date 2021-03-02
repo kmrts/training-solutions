@@ -46,7 +46,7 @@ class ActivityDaoTest {
                 "run with the dogs tonight", ActivityType.RUNNING));
 
         ActivityDao acd= new ActivityDao(dataSource);
-        acd.saveActivity(activities.get(1));
+        System.out.println(acd.saveActivity(activities.get(1)) );
 
     }
 
@@ -66,5 +66,16 @@ class ActivityDaoTest {
 
         System.out.println(activityDao.listActivities());
         assertEquals(25, activityDao.listActivities().get(1).getStartTime().getDayOfMonth());
+    }
+
+    @Test
+    public void insertAndCheckById(){
+        ActivityDao acd= new ActivityDao(dataSource);
+        Activity probe= acd.saveActivity(new Activity(LocalDateTime.of(2021, 2, 15, 12, 22, 0),
+                "hiking in Pilis", ActivityType.HIKING));
+        assertEquals(22, acd.findActivityById(probe.getId()).getStartTime().getMinute());
+        assertEquals(ActivityType.HIKING, acd.findActivityById(probe.getId()).getType());
+
+
     }
 }
