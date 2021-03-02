@@ -37,65 +37,6 @@ Példányosíts egy List<Activity> listát, amit feltöltesz a lekérdezett adat
 
      */
 
-    private static void insertActivity(PreparedStatement stmt, Activity ac) throws SQLException {
-        stmt.setTimestamp(1, Timestamp.valueOf(ac.getStartTime()) );
-        stmt.setString(2, ac.getDesc());
-        stmt.setString(3, ac.getType().toString());
-        stmt.executeUpdate();
-    }
-
-    public Activity selectActivity(DataSource dataSource, int id) {
-        try (
-                Connection conn = dataSource.getConnection();
-                PreparedStatement stmt =
-                        conn.prepareStatement("select * from activities where id = ?");
-        ) {
-            stmt.setInt(1, id);
-
-            return selectActivityByStmt(stmt);
-
-        } catch (SQLException sqle) {
-            throw new IllegalArgumentException("Error by insert", sqle);
-        }
-    }
-
-    private Activity selectActivityByStmt(PreparedStatement stmt) throws SQLException {
-        try (ResultSet rs = stmt.executeQuery()  ) {
-            if (rs.next()) {
-                Activity ac = getActivity(rs);
-                return ac;
-            }
-            throw new IllegalArgumentException("No result");
-        }
-    }
-
-    private Activity getActivity(ResultSet rs) throws SQLException {
-        Activity ac= new Activity(rs.getInt("id"),
-                rs.getTimestamp("start_time").toLocalDateTime(),
-                rs.getString("activity_desc"),
-                ActivityType.valueOf(rs.getString("activity_type"))
-        );
-        return ac;
-    }
-
-    public List<Activity> selectAllActivities(DataSource dataSource){
-
-        try (
-                Connection conn = dataSource.getConnection();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("select * from activities order by id")
-        ) {
-            List<Activity> res = new ArrayList<>();
-            while (rs.next()) {
-                res.add(getActivity(rs));
-            }
-            return res;
-        }
-        catch (SQLException se) {
-            throw new IllegalStateException("Cannot select", se);
-        }
-    }
-
     public static void main(String[] args) {
 
         List<Activity> activities = new ArrayList<>();
@@ -118,24 +59,19 @@ Példányosíts egy List<Activity> listát, amit feltöltesz a lekérdezett adat
             throw new IllegalStateException("Can not create data source", se);
         }
 
-        ActivityTrackerMain atm= new ActivityTrackerMain();
+        ActivityDao acd= new ActivityDao(dataSource);
+//        acd.saveActivity(activities.get(0));
 
-        try (
-                Connection conn = dataSource.getConnection();
-                PreparedStatement stmt =
-                        conn.prepareStatement("insert into activities(start_time, activity_desc, activity_type) " +
-                                "values (?, ?, ?)")
-        ) {
-            for(Activity ac: activities){
-                insertActivity(stmt, ac);
-            }
-        } catch (SQLException se) {
-            throw new IllegalStateException("Cannot insert", se);
+        for(Activity ac: activities){
+            acd.saveActivity(ac);
         }
 
-        System.out.println(atm.selectActivity(dataSource, 3) );
+        System.out.println(acd.findActivityById(2));
 
-        System.out.println(atm.selectAllActivities(dataSource));
+        System.out.println(acd.listActivities());
+
+
+//        System.out.println(atm.selectAllActivities(dataSource));
 
 
 
