@@ -38,49 +38,17 @@ Példányosíts egy List<Activity> listát, amit feltöltesz a lekérdezett adat
 
      */
 
-    public static void main(String[] args) {
-
-        List<Activity> activities = new ArrayList<>();
-        activities.add(new Activity(LocalDateTime.of(2020, 5, 2, 10, 10, 10),
-                "hiking somewhere", ActivityType.HIKING));
-        activities.add(new Activity(LocalDateTime.of(2020, 5, 3, 10, 10, 10),
-                "bb with KovacsNeni", ActivityType.BASKETBALL));
-        activities.add(new Activity(LocalDateTime.of(2020, 5, 5, 10, 10, 10),
-                "run with the dogs tonight", ActivityType.RUNNING));
-
-
-        MariaDbDataSource dataSource;
-        try {
-            dataSource = new MariaDbDataSource();
-            dataSource.setUrl("jdbc:mariadb://localhost:3306/activitytracker?useUnicode=true");  //
-
-            dataSource.setUser("activitytracker"); //
-            dataSource.setPassword("activitytracker"); //
-        } catch (SQLException se) {
-            throw new IllegalStateException("Can not create data source", se);
-        }
-
-        Flyway flyway = Flyway.configure().dataSource(dataSource).load();
-        flyway.clean();
-        flyway.migrate();
-
-        ActivityDao acd= new ActivityDao(dataSource);
-//        acd.saveActivity(activities.get(0));
-
-        for(Activity ac: activities){
-            acd.saveActivity(ac);
-        }
-
-        System.out.println(acd.findActivityById(2));
-
-        System.out.println(acd.listActivities());
-
-
-//        System.out.println(atm.selectAllActivities(dataSource));
-
-
-
-    }
+//    public static void main(String[] args) {
+//
+//        List<Activity> activities = new ArrayList<>();
+//        activities.add(new Activity(LocalDateTime.of(2020, 5, 2, 10, 10, 10),
+//                "hiking somewhere", ActivityType.HIKING));
+//        activities.add(new Activity(LocalDateTime.of(2020, 5, 3, 10, 10, 10),
+//                "bb with KovacsNeni", ActivityType.BASKETBALL));
+//        activities.add(new Activity(LocalDateTime.of(2020, 5, 5, 10, 10, 10),
+//                "run with the dogs tonight", ActivityType.RUNNING));
+//
+//    }
 
 
 }
