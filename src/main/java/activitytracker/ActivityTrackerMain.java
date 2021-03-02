@@ -25,7 +25,7 @@ Létrehozni a Timestamp.valueOf(LocalDateTime) metódussal lehet.
 Amennyiben kész, szervezd ki a beszúrást egy külön metódusba!
 
 
-
+!!  !!!
 create table `activities`(id bigint auto_increment, start_time timestamp, activity_desc varchar(255),
 activity_type varchar(255), primary key(id));
 
@@ -62,34 +62,39 @@ Példányosíts egy List<Activity> listát, amit feltöltesz a lekérdezett adat
     private Activity selectActivityByStmt(PreparedStatement stmt) throws SQLException {
         try (ResultSet rs = stmt.executeQuery()  ) {
             if (rs.next()) {
-                return new Activity(rs.getInt("id"),
-                        rs.getTimestamp("start_time").toLocalDateTime(),
-                        rs.getString("activity_desc"),
-                        ActivityType.valueOf(rs.getString("activity_type"))
-                        );
+                Activity ac = getActivity(rs);
+                return ac;
             }
             throw new IllegalArgumentException("No result");
         }
     }
 
-//    public List<Activity> selectAllActivities(DataSource dataSource){
-//
-//
-//        try (
-//                Connection conn = dataSource.getConnection();
-//                Statement stmt = conn.createStatement();
-//                ResultSet rs = stmt.executeQuery("select * from activities order by id")
-//        ) {
-//            List<Activity> res = new ArrayList<>();
-//            while (rs.next()) {
-//                res.add(selectActivityByStmt(stmt));
-//            }
-//            return res;
-//        }
-//        catch (SQLException se) {
-//            throw new IllegalStateException("Cannot select employees", se);
-//        }
-//    }
+    private Activity getActivity(ResultSet rs) throws SQLException {
+        Activity ac= new Activity(rs.getInt("id"),
+                rs.getTimestamp("start_time").toLocalDateTime(),
+                rs.getString("activity_desc"),
+                ActivityType.valueOf(rs.getString("activity_type"))
+        );
+        return ac;
+    }
+
+    public List<Activity> selectAllActivities(DataSource dataSource){
+
+        try (
+                Connection conn = dataSource.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("select * from activities order by id")
+        ) {
+            List<Activity> res = new ArrayList<>();
+            while (rs.next()) {
+                res.add(getActivity(rs));
+            }
+            return res;
+        }
+        catch (SQLException se) {
+            throw new IllegalStateException("Cannot select", se);
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -129,6 +134,8 @@ Példányosíts egy List<Activity> listát, amit feltöltesz a lekérdezett adat
         }
 
         System.out.println(atm.selectActivity(dataSource, 3) );
+
+        System.out.println(atm.selectAllActivities(dataSource));
 
 
 
