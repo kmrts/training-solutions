@@ -1,5 +1,6 @@
 package activitytracker;
 
+import org.flywaydb.core.Flyway;
 import org.mariadb.jdbc.MariaDbDataSource;
 
 import javax.sql.DataSource;
@@ -58,6 +59,10 @@ Példányosíts egy List<Activity> listát, amit feltöltesz a lekérdezett adat
         } catch (SQLException se) {
             throw new IllegalStateException("Can not create data source", se);
         }
+
+        Flyway flyway = Flyway.configure().dataSource(dataSource).load();
+        flyway.clean();
+        flyway.migrate();
 
         ActivityDao acd= new ActivityDao(dataSource);
 //        acd.saveActivity(activities.get(0));
