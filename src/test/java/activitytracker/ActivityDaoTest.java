@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mariadb.jdbc.MariaDbDataSource;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,16 @@ class ActivityDaoTest {
         assertEquals(22, acd.findActivityById(probe.getId()).getStartTime().getMinute());
         assertEquals(ActivityType.HIKING, acd.findActivityById(probe.getId()).getType());
 
+    }
+    @Test
+    public void testSaveTrackPoints(){
+        ActivityDao ad= new ActivityDao(dataSource);
+        Activity activity= new Activity(LocalDateTime.of(2021, 1, 25, 12, 31, 0),
+                "run with the dogs tonight", ActivityType.RUNNING);
+        activity.addTrackPoint(new TrackPoint(LocalDate.of(2021, 1, 10), 80, 50));
+        activity.addTrackPoint(new TrackPoint(LocalDate.of(2021, 1, 10), 81, 50));
+        activity.addTrackPoint(new TrackPoint(LocalDate.of(2021, 1, 11), 81, 51));
 
+        ad.saveActivity(activity);
     }
 }

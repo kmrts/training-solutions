@@ -2,6 +2,7 @@ package activitytracker;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,26 @@ Töröld ki az adatbázisban a táblát, és használd a Flyway-t, hogy hozza l�
 
 Generált azonosító lekérdezése
 Módosítsd úgy a void saveActivity(Activity) metódust, hogy Activity-t adjon vissza, aminek már fel van töltve az id mezője!
+
+Az Activity tartalmazzon egy List<TrackPoint> attribútumot! Módosítsd a saveActivity() metódust,
+hogy egy tranzakcióban mentse le a TrackPoint objektumokat is a track_point táblába. Hozd létre a táblát!
+A track_point táblának egy külső kulcsot kell tartalmaznia az activities táblára.
+
+Módosítsd a findActivityById() metódust, hogy betöltse a TrackPoint értékeket is!
+
+
+CREATE TABLE `track_point`(id BIGINT AUTO_INCREMENT,
+time DATE, lat DOUBLE, lon DOUBLE, activity_id BIGINT,
+PRIMARY KEY(id),
+FOREIGN KEY(`activity_id`) REFERENCES `activities`(`id`) );
+
+Írj rá tesztesetet!
+
+Szabályok a koordinátákra:
+    Szélesség : +90 - -90
+    Hosszúság : +180 - -180
+
+Amennyiben valamelyik pont nem felel meg a szabályoknak, vissza kell görgetni a tranzakciót, és kivételt kell dobni.
      */
     private DataSource dataSource;
 
@@ -34,7 +55,8 @@ Módosítsd úgy a void saveActivity(Activity) metódust, hogy Activity-t adjon 
                                 "values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         ) {
             insertActivity(stmt, activity);
-            int id= executeAndGetGeneratedKey(stmt);
+            int id = executeAndGetGeneratedKey(stmt);
+            saveTrackPoints(activity.getTrackPoints(), id);
             return findActivityById(id);
 
         } catch (SQLException se) {
@@ -62,6 +84,46 @@ Módosítsd úgy a void saveActivity(Activity) metódust, hogy Activity-t adjon 
         } catch (SQLException sqle) {
             throw new IllegalArgumentException("Error by insert", sqle);
         }
+    }
+
+    private void saveTrackPoints(List<TrackPoint> trackPoints, int actId) {
+        try (
+                Connection conn = dataSource.getConnection();
+
+        ) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement stmt = conn.prepareStatement("insert into track_point(time, lat, lon, activity_id) " +
+                    "values (?, ?, ?, ?)")) {
+                for (TrackPoint trp : trackPoints) {
+                    if(isValidLatLon(trp.getLat(), trp.getLon())){
+                        stmt.setDate(1, Date.valueOf(trp.getTime()));
+                        stmt.setDouble(2, trp.getLat());
+                        stmt.setDouble(3, trp.getLon());
+                        stmt.setInt(4, actId);
+                        stmt.executeUpdate();
+                    }else{
+                        throw new IllegalArgumentException("Invalid lat or lon");
+                    }
+                }
+                conn.commit();
+            }catch (IllegalArgumentException iae){
+                conn.rollback();
+            }
+
+
+        } catch (SQLException se) {
+            throw new IllegalStateException("cannot save", se);
+        }
+    }
+    private boolean isValidLatLon(double lat, double lon){
+        if(lat< -90 || lat> 90){
+            return false;
+        }
+        if(lon< -180 || lon> 180){
+            return false;
+        }
+        return true;
+
     }
 
     public Activity findActivityById(int id) {
