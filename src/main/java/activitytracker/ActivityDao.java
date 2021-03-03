@@ -56,7 +56,11 @@ Amennyiben valamelyik pont nem felel meg a szabályoknak, vissza kell görgetni 
         ) {
             insertActivity(stmt, activity);
             int id = executeAndGetGeneratedKey(stmt);
-            saveTrackPoints(activity.getTrackPoints(), id);
+
+            if(!activity.getTrackPoints().isEmpty()){
+                saveTrackPoints(activity.getTrackPoints(), id);
+            }
+
             return findActivityById(id);
 
         } catch (SQLException se) {
@@ -152,12 +156,43 @@ Amennyiben valamelyik pont nem felel meg a szabályoknak, vissza kell görgetni 
     }
 
     private Activity getActivity(ResultSet rs) throws SQLException {
-        Activity ac = new Activity(rs.getInt("id"),
-                rs.getTimestamp("start_time").toLocalDateTime(),
+        int id= rs.getInt("id");
+
+        Activity ac = new Activity(id, rs.getTimestamp("start_time").toLocalDateTime(),
                 rs.getString("activity_desc"),
                 ActivityType.valueOf(rs.getString("activity_type"))
         );
+        List<TrackPoint> trackPoints= selectTrackPointsByActivityId(id);
+//        System.out.println(trackPoints);
+        if(!trackPoints.isEmpty()){
+            for(TrackPoint t: trackPoints){
+                ac.addTrackPoint(t);
+            }
+        }
+
         return ac;
+    }
+
+    private List<TrackPoint> selectTrackPointsByActivityId(int id) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt =
+                        conn.prepareStatement("select * from track_point where activity_id = ?");
+        ) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<TrackPoint> res = new ArrayList<>();
+                while (rs.next()) {
+                    res.add(new TrackPoint(rs.getLong("id"), rs.getDate("time").toLocalDate(),
+                            rs.getDouble("lat"), rs.getDouble("lon")));
+                }
+                return res;
+            }
+
+
+        } catch (SQLException sqle) {
+            throw new IllegalArgumentException("Error by insert", sqle);
+        }
     }
 
     public List<Activity> listActivities() {

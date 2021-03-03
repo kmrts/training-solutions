@@ -65,6 +65,7 @@ public class Activity {
                 ", startTime=" + startTime +
                 ", desc='" + desc + '\'' +
                 ", type=" + type +
+                ", trackPoints=" + trackPoints +
                 '}';
     }
 }
