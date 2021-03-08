@@ -65,8 +65,8 @@ public class VaccMain {
         System.out.println("Kérem az irányítószámot: ");
         String zip= sc.nextLine();
         System.out.println("Kérem a mentendő fájl nevét: ");
-        String file= sc.nextLine();
-        new VaccDao(dataSource).selectCitizensWithZip(zip);
+        String fileName= sc.nextLine();
+        new VaccDao(dataSource).selectCitizensWithZip(zip, fileName);
     }
 
     private void registrateGroup(Scanner sc, DataSource dataSource) {
