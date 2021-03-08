@@ -44,7 +44,11 @@ public class VaccMain {
                     System.out.println("Generálás\n");
                     generateFromZip(sc, dataSource);
                     break;
-                case 4, 5, 6:
+                case 4:
+                    System.out.println("Oltás\n");
+                    injVaccine(sc, dataSource);
+                    break;
+                case 5, 6:
                     System.out.println("under const.");
                     break;
                 default:
@@ -56,6 +60,29 @@ public class VaccMain {
             chooseFromMenu(dataSource);
         }
 
+    }
+
+    private void injVaccine(Scanner sc, DataSource dataSource) {
+        /*
+        be kell kérni a TAJ számot. Le kell kérdezni, hogy volt-e már oldása.
+        Ha nem volt, akkor be kell kérni a dátumot és a típust.
+        Ha már volt egy, akkor ki kell írni, hogy mikor és milyen vakcinával.
+        Majd be kell írni a dátumot. Ha már kettő volt neki, akkor hibaüzenetet kell kiírni.
+
+        A következő lépésben megtörténik az első oltás.
+        Az oltás elvégzéséhez meg kell adni a TAJ számot, a dátumot és az oltóanyag típusát.
+Ha a TAJ szám érvénytelen, vagy nincs rá regisztráció, hibaüzenetet kell kiírni.
+
+Azonban az oltás meg is hiúsulhat. Pl. az állampolgár visszautasítja, olyan betegsége van, várandós, stb.
+Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadásával.
+         */
+        System.out.println("Kérem a taj-számot: ");
+        String taj= sc.nextLine();
+        //érvényesség
+        Vaccine lastVac= new VaccDao(dataSource).writeDataFromCitizen(taj);
+        if(lastVac!= null){
+            System.out.printf("%d oltást kapott, beoltva legutóbb %s -n", lastVac.getNumber(), lastVac.getLast());
+        }
     }
 
     private void generateFromZip(Scanner sc, DataSource dataSource) {

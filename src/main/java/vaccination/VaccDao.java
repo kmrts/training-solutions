@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,5 +111,28 @@ public class VaccDao {
                 && rs.getDate("last_vaccination").toLocalDate().isBefore(interval);
 
 
+    }
+
+    public Vaccine writeDataFromCitizen(String taj) {
+        try (
+                Connection conn = dataSource.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `taj`=" +taj)
+        ) {
+            if (rs.next()) {
+
+                int num = rs.getInt("number_of_vaccination");
+                LocalDate last= null;
+                if(num!=0){
+                    last= rs.getDate("last_vaccination").toLocalDate();
+                }
+                return new Vaccine(num, last);
+            }
+            System.out.println("Hibás, vagy nem regisztrált taj-szám");
+            return null;
+        }
+        catch (SQLException se) {
+            throw new IllegalStateException("Cannot select employees", se);
+        }
     }
 }
