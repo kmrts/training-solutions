@@ -1,6 +1,17 @@
 package vaccination;
 
+import org.flywaydb.core.Flyway;
+import org.mariadb.jdbc.MariaDbDataSource;
+
+import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class VaccMain {
@@ -14,7 +25,7 @@ public class VaccMain {
                 "6. Riport\n");
     }
 
-    public void chooseFromMenu() {
+    public void chooseFromMenu(DataSource dataSource) {
         System.out.println("Válassz menüpontot: ");
         Scanner sc = new Scanner(System.in);
         try {
@@ -23,9 +34,17 @@ public class VaccMain {
             switch (choose) {
                 case 1:
                     System.out.println("Regisztráció\n");
-                    registrate(sc);
+                    registrate(sc, dataSource);
                     break;
-                case 2, 3, 4, 5, 6:
+                case 2:
+                    System.out.println("Tömeges regisztráció fájlból\n");
+                    registrateGroup(sc, dataSource);
+                    break;
+                case 3:
+                    System.out.println("Generálás\n");
+                    generateFromZip(sc, dataSource);
+                    break;
+                case 4, 5, 6:
                     System.out.println("under const.");
                     break;
                 default:
@@ -34,12 +53,45 @@ public class VaccMain {
 
         } catch (InputMismatchException ime) {
             System.out.println("Ez nem egy szám!");
-            chooseFromMenu();
+            chooseFromMenu(dataSource);
         }
 
     }
 
-    private void registrate(Scanner sc) {
+    private void generateFromZip(Scanner sc, DataSource dataSource) {
+        /*
+        kérje be az irányítószámot, majd a fájlt, amilyen néven el kell menteni
+         */
+        System.out.println("Kérem az irányítószámot: ");
+        String zip= sc.nextLine();
+        System.out.println("Kérem a mentendő fájl nevét: ");
+        String file= sc.nextLine();
+        new VaccDao(dataSource).selectCitizensWithZip(zip);
+    }
+
+    private void registrateGroup(Scanner sc, DataSource dataSource) {
+        /*
+        Tömeges regisztráció: kérje be a fájl elérési útvonalát, ha nincs ott, vagy hibás a fájl, akkor írjon ki hibaüzenetet,
+        amúgy töltse be a citizens táblába
+         */
+        System.out.println("Adja meg a fájl elérési útját: ");
+        String path= sc.nextLine();
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(path))) {
+            String line= reader.readLine();
+            while ((line = reader.readLine())  != null) {
+
+                String parts[]= line.split(";");
+                Citizen cit= new Citizen(parts[0], parts[1], Integer.parseInt(parts[2]), parts[3], parts[4] );
+                new VaccDao(dataSource).saveCitizen(cit);
+            }
+        } catch (IOException ioe) {
+            throw new IllegalStateException("Can not read file", ioe);
+        }
+        // NoSuchFile... | több catch, hibaüz.
+
+    }
+
+    private void registrate(Scanner sc, DataSource dataSource) {
         /*
 
     Ellenőrizzük, a név nem lehet üres
@@ -73,6 +125,8 @@ public class VaccMain {
         citizen.setTaj(regTaj(sc));
 
         System.out.println(citizen);
+        new VaccDao(dataSource).saveCitizen(citizen);
+
     }
 
 
@@ -94,29 +148,57 @@ public class VaccMain {
 //            System.out.println("Üres, kérem újra: ");
 //            regZipcode(sc);
 //        }
-        while (zip.isEmpty()) {
-            System.out.println("Üres, kérem újra: ");
+        List<String> cities= writeCity(zip);
+        while (zip.isEmpty()|| cities.isEmpty()) {
+            System.out.println("Üres, vagy nincs ilyen irsz., kérem újra: ");
             zip = sc.nextLine();
+            cities= writeCity(zip);
         }
-        // kiir
+//        String city= writeCity(zip);
+
+        System.out.printf("Az irányítószámhoz tartozó település(ek): %s\n", cities);
         return zip;
     }
 
-    private int regAge(Scanner sc) {
+    private List<String> writeCity(String zip) {
+        MariaDbDataSource dataSource;
         try {
-            int age = sc.nextInt();
-            sc.nextLine();
-            while (age < 10 || age > 150) {
-                System.out.println("Min 10, max 150, kérném újra: ");
+            dataSource = new MariaDbDataSource();
+            dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccination?useUnicode=true");
+            dataSource.setUser("vaccination");
+            dataSource.setPassword("vaccination");
+        }
+        catch (SQLException se) {
+            throw new IllegalStateException("Can not create data source", se);
+        }
+        return new VaccDao(dataSource).writeCityFromZip(zip);
+    }
+
+    private int regAge(Scanner sc) {
+//        try {
+        boolean isNumber = false;
+        int age= 0;
+        while (!isNumber) {
+            if (sc.hasNextInt()) {
+                isNumber = true;
                 age = sc.nextInt();
                 sc.nextLine();
+                while (age < 10 || age > 150) {
+                    System.out.println("Min 10, max 150, kérném újra: ");
+                    age = sc.nextInt();
+                    sc.nextLine();
+                }
+            }else{
+                System.out.println("nem szám, kérem újra: ");
+                sc.nextLine();  ///
             }
-            return age;
-        } catch (InputMismatchException ime) {
-            System.out.println("Ez nem szám!");
-            regAge(sc);
         }
-        return 0;
+        return age;
+//        } catch (InputMismatchException ime) {
+//            System.out.println("Ez nem szám!");
+//            regAge(sc);
+//        }
+//        return 0;
     }
 
     private String regEmail(Scanner sc) {
@@ -174,14 +256,33 @@ public class VaccMain {
             }
 
         }
-        return (sum%10== Integer.parseInt(String.valueOf(s.charAt(8))));
+        return (sum % 10 == Integer.parseInt(String.valueOf(s.charAt(8))));
 
     }
 
     public static void main(String[] args) {
+        MariaDbDataSource dataSource;
+        try {
+            dataSource = new MariaDbDataSource();
+            dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccination?useUnicode=true");
+            dataSource.setUser("vaccination");
+            dataSource.setPassword("vaccination");
+        }
+        catch (SQLException se) {
+            throw new IllegalStateException("Can not create data source", se);
+        }
+        VaccDao vd= new VaccDao(dataSource);
+
+//        Flyway flyway = Flyway.configure().locations("/db/migration/vaccination").dataSource(dataSource).load();
+//
+////        flyway.clean();
+//
+//        flyway.migrate();
+
+
         VaccMain vm = new VaccMain();
         vm.printMenu();
-        vm.chooseFromMenu();
+        vm.chooseFromMenu(dataSource);
 //        System.out.println(vm.isCdvValid("111111110"));
 //        System.out.println(vm.isCdvValid("111111117"));
 
