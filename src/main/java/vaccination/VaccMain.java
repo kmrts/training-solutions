@@ -1,6 +1,5 @@
 package vaccination;
 
-import org.flywaydb.core.Flyway;
 import org.mariadb.jdbc.MariaDbDataSource;
 
 import javax.sql.DataSource;
@@ -9,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -48,7 +47,11 @@ public class VaccMain {
                     System.out.println("Oltás\n");
                     injVaccine(sc, dataSource);
                     break;
-                case 5, 6:
+                case 5:
+                    System.out.println("Oltás meghiúsulás\n");
+                    failedVacc(sc, dataSource);
+                    break;
+                case 6:
                     System.out.println("under const.");
                     break;
                 default:
@@ -62,6 +65,21 @@ public class VaccMain {
 
     }
 
+    private void failedVacc(Scanner sc, DataSource dataSource) {
+        /*
+        Azonban az oltás meg is hiúsulhat. Pl. az állampolgár visszautasítja, olyan betegsége van, várandós, stb.
+Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadásával.
+         */
+        VaccDao vd= new VaccDao(dataSource);
+        int citId = getTajAndRead(sc, vd).getCitId();
+
+        System.out.println("Meghiúsulás oka: ");
+        String note= sc.nextLine();
+        String status= "failed";
+        LocalDateTime actualVacc= LocalDateTime.now();
+
+    }
+
     private void injVaccine(Scanner sc, DataSource dataSource) {
         /*
         be kell kérni a TAJ számot. Le kell kérdezni, hogy volt-e már oldása.
@@ -72,26 +90,73 @@ public class VaccMain {
         A következő lépésben megtörténik az első oltás.
         Az oltás elvégzéséhez meg kell adni a TAJ számot, a dátumot és az oltóanyag típusát.
 Ha a TAJ szám érvénytelen, vagy nincs rá regisztráció, hibaüzenetet kell kiírni.
+A következő lépésben megtörténik az második oltás. Ugyanazokat az adatokat kell megadni.
+Azonban itt arra is figyelni kell, hogy az előző oltás óta 15 napnak el kell telnie.
+Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal lehet beoltani.
 
-Azonban az oltás meg is hiúsulhat. Pl. az állampolgár visszautasítja, olyan betegsége van, várandós, stb.
-Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadásával.
          */
+        VaccDao vd= new VaccDao(dataSource);
+
+        Vaccine vacc = getTajAndRead(sc, vd);
+
+        if(vacc!= null){
+            if(vacc.isVaccined()){
+                System.out.printf("%d oltást kapott, beoltva legutóbb %s -n.\n", vacc.getTimes(), vacc.getLastDate());
+                caseVacc(sc, vd, vacc);
+            }else{
+                System.out.println("Nem kapott még oltást.");
+            }
+        }
+
+    }
+
+    private void caseVacc(Scanner sc, VaccDao vd, Vaccine vacc) {
+        LocalDateTime actualVacc= LocalDateTime.now();
+
+        switch (vacc.getTimes()){
+            case 2:
+                System.out.println("Már megvolt a 2 db oltása. Nem oltható.");
+                break;
+            case 1:
+//                LocalDateTime actualVacc= LocalDateTime.now();
+
+                if(!vacc.getLastDate().isBefore(actualVacc.toLocalDate().minusDays(14))){
+                    System.out.println("Nem telt le 15 nap, nem oltható újra");
+                    break;
+                };
+                // else kiolvas vaccin. tábla: id alapj, típus
+                String type= vd.readTypeFromVacTable(vacc.getCitId());
+                System.out.printf("Az oltóanyag típusa: %s\n", type);
+                vacc.setType(type);
+                vacc.setStatus("second");
+                vacc.setNextTime(actualVacc);
+                vacc.setTimes(2);
+                System.out.println(vacc);
+
+                vd.vaccIn(vacc);
+                break;
+
+            case 0:
+                vacc.setStatus("first");
+                System.out.println("Kérem az oltóanyag típusát: ");
+                vacc.setType(sc.nextLine());
+                vacc.setNextTime(actualVacc);
+                vacc.setTimes(1);
+                System.out.println(vacc);
+                vd.vaccIn(vacc);
+        }
+    }
+
+    private Vaccine getTajAndRead(Scanner sc, VaccDao vd) {
         System.out.println("Kérem a taj-számot: ");
         String taj= sc.nextLine();
         while (!isCdvValid(taj)) {
             System.out.println("Nem valid, kérem újra: ");
             taj = sc.nextLine();
         }
-        Vaccine lastVac= new VaccDao(dataSource).readDataFromCitizen(taj);
-
-        if(lastVac!= null){
-            if(lastVac.isVaccined()){
-                System.out.printf("%d oltást kapott, beoltva legutóbb %s -n.", lastVac.getNumber(), lastVac.getLast());
-            }else{
-                System.out.println("Nem kapott még oltást.");
-            }
-        }
-
+        Vaccine vacc= vd.readDataFromCitizen(taj);
+        System.out.println(vacc);
+        return vacc;
     }
 
     private void generateFromZip(Scanner sc, DataSource dataSource) {
@@ -107,7 +172,8 @@ Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadás
 
     private void registrateGroup(Scanner sc, DataSource dataSource) {
         /*
-        Tömeges regisztráció: kérje be a fájl elérési útvonalát, ha nincs ott, vagy hibás a fájl, akkor írjon ki hibaüzenetet,
+        Tömeges regisztráció: kérje be a fájl elérési útvonalát, ha nincs ott, vagy hibás a fájl,
+        akkor írjon ki hibaüzenetet,
         amúgy töltse be a citizens táblába
          */
         System.out.println("Adja meg a fájl elérési útját: ");
@@ -140,14 +206,6 @@ Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadás
 
          */
         Citizen citizen = new Citizen();
-//        System.out.println("Kérem a nevet: ");
-//        while(!isValidName(sc)){
-//            citizen.setName();
-//        }
-//        String name= sc.nextLine();
-//        if(name.isEmpty()){
-//
-//        }
 
         System.out.println("Kérem a nevet: ");
         citizen.setName(regName(sc));
@@ -256,7 +314,7 @@ Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadás
         return email.contains("@") && email.length() >= 3;
     }
 
-    private String regTaj(Scanner sc) { //check
+    private String regTaj(Scanner sc) {
         String taj = sc.nextLine();
         while (!isCdvValid(taj)) {
             System.out.println("Nem valid, kérem újra: ");

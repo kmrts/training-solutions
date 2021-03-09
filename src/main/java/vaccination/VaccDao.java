@@ -70,19 +70,19 @@ public class VaccDao {
         }
     }
 
-    private void writeTofile(ResultSet rs, String fileName) throws SQLException{ //throws SQLException
+    private void writeTofile(ResultSet rs, String fileName) throws SQLException { //throws SQLException
         /*
         Időpont;Név;Irányítószám;Életkor;E-mail cím;TAJ szám
 8:00;John Doe;2061;60;john.doe@example.com;1234567890
 8:30;Jack Doe;2061;40;jack.doe@example.com;1234567881
          */
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName))) {
-            LocalTime actTime= LocalTime.of(8, 0);
-            int counter= 0;
+            LocalTime actTime = LocalTime.of(8, 0);
+            int counter = 0;
             writer.write("Időpont;Név;Irányítószám;Életkor;E-mail cím;TAJ szám\n");
-            while (rs.next() && counter< 16) {
+            while (rs.next() && counter < 16) {
                 if (readyForVacc(rs)) {
-                    StringBuilder sb= new StringBuilder(actTime.toString());
+                    StringBuilder sb = new StringBuilder(actTime.toString());
                     sb.append(";").append(rs.getString("citizen_name"));
                     sb.append(";").append(rs.getString("zip"));
                     sb.append(";").append(rs.getInt("age"));
@@ -92,7 +92,7 @@ public class VaccDao {
 
                     writer.write(sb.toString());
                     counter++;
-                    actTime= actTime.plusMinutes(30);
+                    actTime = actTime.plusMinutes(30);
 
                 }
             }
@@ -105,7 +105,7 @@ public class VaccDao {
         if (rs.getInt("number_of_vaccination") == 0) {
             return true;
         }
-        LocalDate interval= LocalDate.now().minusDays(14);
+        LocalDate interval = LocalDate.now().minusDays(14);
 
         return rs.getInt("number_of_vaccination") == 1
                 && rs.getDate("last_vaccination").toLocalDate().isBefore(interval);
@@ -117,23 +117,65 @@ public class VaccDao {
         try (
                 Connection conn = dataSource.getConnection();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `taj`=" +taj)
+                ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `taj`=" + taj)
         ) {
             if (rs.next()) {
-                boolean isVacc= false;
+                boolean isVacc = false;
+                int id = rs.getInt("citizen_id");
                 int num = rs.getInt("number_of_vaccination");
-                LocalDate last= null;
-                if(num!=0){
-                    isVacc= true;
-                    last= rs.getDate("last_vaccination").toLocalDate();
+                LocalDate last = null;
+                if (num != 0) {
+                    isVacc = true;
+
+                    last = rs.getDate("last_vaccination").toLocalDate();
                 }
-                return new Vaccine(isVacc, num, last);
+                return new Vaccine(id, isVacc, num, last);
             }
-            System.out.println("Hibás, vagy nem regisztrált taj-szám");
+            System.out.println("Nem regisztrált taj-szám");
             return null;
+        } catch (SQLException se) {
+            throw new IllegalStateException("Cannot select citizen", se);
         }
-        catch (SQLException se) {
+    }
+
+    public String readTypeFromVacTable(int citId) {
+        try (
+                Connection conn = dataSource.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT `vaccination_type` FROM `vaccinations` WHERE `citizen_id`=" + citId)
+        ) {
+            if (rs.next()) {
+
+                return rs.getString("vaccination_type");
+            }
+            throw new IllegalArgumentException("No result");
+        } catch (SQLException se) {
             throw new IllegalStateException("Cannot select employees", se);
+        }
+    }
+
+    public void vaccIn(Vaccine vaccine) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt =
+                        conn.prepareStatement("insert into vaccinations(citizen_id, vaccination_date," +
+                                "status, vaccination_type) values (?, ?, ?, ?)");
+                PreparedStatement stmtCitz = conn.prepareStatement("UPDATE citizens SET number_of_vaccination=?," +
+                        " last_vaccination=? WHERE citizen_id=?")
+        ) {
+            stmt.setInt(1, vaccine.getCitId());
+            stmt.setTimestamp(2, Timestamp.valueOf(vaccine.getNextTime()));
+            stmt.setString(3, vaccine.getStatus());
+            stmt.setString(4, vaccine.getType());
+            stmt.executeUpdate();
+
+            stmtCitz.setInt(1, vaccine.getTimes());
+            stmtCitz.setTimestamp(2,Timestamp.valueOf(vaccine.getNextTime()) );
+            stmtCitz.setInt(3, vaccine.getCitId());
+            stmtCitz.executeUpdate();
+
+        } catch (SQLException se) {
+            throw new IllegalStateException("Cannot insert", se);
         }
     }
 }
