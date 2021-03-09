@@ -113,20 +113,21 @@ public class VaccDao {
 
     }
 
-    public Vaccine writeDataFromCitizen(String taj) {
+    public Vaccine readDataFromCitizen(String taj) {
         try (
                 Connection conn = dataSource.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `taj`=" +taj)
         ) {
             if (rs.next()) {
-
+                boolean isVacc= false;
                 int num = rs.getInt("number_of_vaccination");
                 LocalDate last= null;
                 if(num!=0){
+                    isVacc= true;
                     last= rs.getDate("last_vaccination").toLocalDate();
                 }
-                return new Vaccine(num, last);
+                return new Vaccine(isVacc, num, last);
             }
             System.out.println("Hibás, vagy nem regisztrált taj-szám");
             return null;

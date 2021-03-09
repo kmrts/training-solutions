@@ -78,11 +78,20 @@ Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadás
          */
         System.out.println("Kérem a taj-számot: ");
         String taj= sc.nextLine();
-        //érvényesség
-        Vaccine lastVac= new VaccDao(dataSource).writeDataFromCitizen(taj);
-        if(lastVac!= null){
-            System.out.printf("%d oltást kapott, beoltva legutóbb %s -n", lastVac.getNumber(), lastVac.getLast());
+        while (!isCdvValid(taj)) {
+            System.out.println("Nem valid, kérem újra: ");
+            taj = sc.nextLine();
         }
+        Vaccine lastVac= new VaccDao(dataSource).readDataFromCitizen(taj);
+
+        if(lastVac!= null){
+            if(lastVac.isVaccined()){
+                System.out.printf("%d oltást kapott, beoltva legutóbb %s -n.", lastVac.getNumber(), lastVac.getLast());
+            }else{
+                System.out.println("Nem kapott még oltást.");
+            }
+        }
+
     }
 
     private void generateFromZip(Scanner sc, DataSource dataSource) {
