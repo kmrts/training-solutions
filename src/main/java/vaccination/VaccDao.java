@@ -65,14 +65,14 @@ public class VaccDao {
                 ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `zip`=" + zip +
                         " ORDER BY `age` DESC, `citizen_name`")
         ) {
-            writeTofile(rs, fileName);
+            writeCitizenDataTofile(rs, fileName);
 
         } catch (SQLException se) {
             throw new IllegalStateException("Cannot select", se);
         }
     }
 
-    private void writeTofile(ResultSet rs, String fileName) throws SQLException { //throws SQLException
+    private void  writeCitizenDataTofile(ResultSet rs, String fileName) throws SQLException { //throws SQLException
         /*
         Időpont;Név;Irányítószám;Életkor;E-mail cím;TAJ szám
 8:00;John Doe;2061;60;john.doe@example.com;1234567890
@@ -210,14 +210,37 @@ public class VaccDao {
             while (rs.next()) {
                 String zip = rs.getString("zip");
                 int number= rs.getInt("number_of_vaccination");
+
                 if(zipvacc.containsKey(zip)){
-                    int before= zipvacc.get(zip).get(number); ///
-                    //zipvacc.put(zip, )
+
+                    List<Integer> nextState= new ArrayList<>(zipvacc.get(zip));
+                    nextState.set(number, nextState.get(number)+1);
+                    zipvacc.put(zip, nextState);
+                }else{
+                    List<Integer> init= new ArrayList<>(List.of(0, 0, 0));
+                    init.set(number, 1);
+                    zipvacc.put(zip, init);
                 }
+//                System.out.println(zipvacc);
             }
             return zipvacc;
         } catch (SQLException se) {
             throw new IllegalStateException("Cannot select citizens", se);
+        }
+    }
+
+    public void reportToFile(Map<String, List<Integer>> zipvacc, String fileName) {
+        try (BufferedWriter bwr = Files.newBufferedWriter(Path.of(fileName))) {
+            bwr.write("Oltási adatok irányítószámonként: \n");
+            for(Map.Entry<String, List<Integer>> entry: zipvacc.entrySet()){
+                bwr.write(String.format("\n%s irányítószám adatai:\n", entry.getKey()));
+
+                for(int i=0; i< 3; i++){
+                    bwr.write(String.format("%d alkalommal oltottak száma: %d\n", i, entry.getValue().get(i)));
+                }
+            }
+        } catch (IOException ioe) {
+            throw new IllegalStateException("Can not write file", ioe);
         }
     }
 }

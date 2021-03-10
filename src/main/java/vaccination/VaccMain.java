@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -55,7 +56,7 @@ public class VaccMain {
                         failedVacc(sc, dataSource);
                         break;
                     case 6:
-                        System.out.println("Riport\n");
+                        System.out.println("Riport");
                         report(sc, dataSource);
                         break;
                     case 99:
@@ -81,10 +82,27 @@ public class VaccMain {
         Az alkalmazásba kell egy riportot is megvalósítani, ami kiírja, hogy irányítószámonként hány beoltatlan,
         egyszer és kétszer beoltott állampolgár van.
          */
-        Map<String, List<Integer>> zipvacc= new TreeMap<>();
+//        Map<String, List<Integer>> zipvacc= new TreeMap<>();
 
         VaccDao vd = new VaccDao(dataSource);
-        zipvacc= vd.getNumOfVaccByZip();
+        Map<String, List<Integer>> zipvacc= vd.getNumOfVaccByZip();
+        System.out.println("Képernyőre vagy fájlba írjuk? (F / other)");
+        String key= sc.nextLine().toUpperCase();
+        if(key.startsWith("F")){
+
+            String fileName= "vaccine_report_"+ LocalDate.now()+ ".log";
+            System.out.println("Fájlba írás: "+ fileName);
+            vd.reportToFile(zipvacc, fileName);
+        }else{
+            for(Map.Entry<String, List<Integer>> entry: zipvacc.entrySet()){
+                System.out.printf("\n%s irányítószám adatai:\n", entry.getKey());
+
+                for(int i=0; i< 3; i++){
+                    System.out.printf("%d alkalommal oltottak száma: %d\n", i, entry.getValue().get(i));
+                }
+            }
+        }
+
     }
 
     private void failedVacc(Scanner sc, DataSource dataSource) {
