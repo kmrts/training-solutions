@@ -9,9 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class VaccMain {
 
@@ -57,7 +55,8 @@ public class VaccMain {
                         failedVacc(sc, dataSource);
                         break;
                     case 6:
-                        System.out.println("under const.");
+                        System.out.println("Riport\n");
+                        report(sc, dataSource);
                         break;
                     case 99:
                         System.out.println("Kilépés\n");
@@ -75,6 +74,17 @@ public class VaccMain {
         }
 
 
+    }
+
+    private void report(Scanner sc, DataSource dataSource) {
+        /*
+        Az alkalmazásba kell egy riportot is megvalósítani, ami kiírja, hogy irányítószámonként hány beoltatlan,
+        egyszer és kétszer beoltott állampolgár van.
+         */
+        Map<String, List<Integer>> zipvacc= new TreeMap<>();
+
+        VaccDao vd = new VaccDao(dataSource);
+        zipvacc= vd.getNumOfVaccByZip();
     }
 
     private void failedVacc(Scanner sc, DataSource dataSource) {

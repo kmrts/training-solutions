@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class VaccDao {
 
@@ -194,6 +196,28 @@ public class VaccDao {
 
         } catch (SQLException se) {
             throw new IllegalStateException("Cannot insert", se);
+        }
+    }
+
+    public Map<String, List<Integer>> getNumOfVaccByZip() {
+        try (
+                Connection conn = dataSource.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT zip, number_of_vaccination FROM `citizens` ORDER BY zip, number_of_vaccination")
+
+        ) {
+            Map<String, List<Integer>> zipvacc= new TreeMap<>();
+            while (rs.next()) {
+                String zip = rs.getString("zip");
+                int number= rs.getInt("number_of_vaccination");
+                if(zipvacc.containsKey(zip)){
+                    int before= zipvacc.get(zip).get(number); ///
+                    //zipvacc.put(zip, )
+                }
+            }
+            return zipvacc;
+        } catch (SQLException se) {
+            throw new IllegalStateException("Cannot select citizens", se);
         }
     }
 }
