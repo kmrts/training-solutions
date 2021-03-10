@@ -15,53 +15,65 @@ import java.util.Scanner;
 
 public class VaccMain {
 
-    public void printMenu() {
-        System.out.println("1. Regisztráció\n" +
+    private void printMenu() {
+        System.out.println("\n1. Regisztráció\n" +
                 "2. Tömeges regisztráció\n" +
                 "3. Generálás\n" +
                 "4. Oltás\n" +
                 "5. Oltás meghiúsulás\n" +
-                "6. Riport\n");
+                "6. Riport\n" +
+                "99. Kilépés");
     }
 
     public void chooseFromMenu(DataSource dataSource) {
-        System.out.println("Válassz menüpontot: ");
-        Scanner sc = new Scanner(System.in);
-        try {
-            int choose = sc.nextInt();
-            sc.nextLine();
-            switch (choose) {
-                case 1:
-                    System.out.println("Regisztráció\n");
-                    registrate(sc, dataSource);
-                    break;
-                case 2:
-                    System.out.println("Tömeges regisztráció fájlból\n");
-                    registrateGroup(sc, dataSource);
-                    break;
-                case 3:
-                    System.out.println("Generálás\n");
-                    generateFromZip(sc, dataSource);
-                    break;
-                case 4:
-                    System.out.println("Oltás\n");
-                    injVaccine(sc, dataSource);
-                    break;
-                case 5:
-                    System.out.println("Oltás meghiúsulás\n");
-                    failedVacc(sc, dataSource);
-                    break;
-                case 6:
-                    System.out.println("under const.");
-                    break;
-                default:
-                    System.out.println("Nincs ilyen menüpont!");
+        boolean stepOut = false;
+        while (!stepOut) {
+            printMenu();
+
+            System.out.println("Válassz menüpontot: ");
+            Scanner sc = new Scanner(System.in);
+            try {
+                int choose = sc.nextInt();
+                sc.nextLine();
+                switch (choose) {
+                    case 1:
+                        System.out.println("Regisztráció\n");
+                        registrate(sc, dataSource);
+                        break;
+                    case 2:
+                        System.out.println("Tömeges regisztráció fájlból\n");
+                        registrateGroup(sc, dataSource);
+                        break;
+                    case 3:
+                        System.out.println("Generálás\n");
+                        generateFromZip(sc, dataSource);
+                        break;
+                    case 4:
+                        System.out.println("Oltás\n");
+                        injVaccine(sc, dataSource);
+                        break;
+                    case 5:
+                        System.out.println("Oltás meghiúsulás\n");
+                        failedVacc(sc, dataSource);
+                        break;
+                    case 6:
+                        System.out.println("under const.");
+                        break;
+                    case 99:
+                        System.out.println("Kilépés\n");
+                        stepOut = true;
+                        break;
+                    default:
+                        System.out.println("Nincs ilyen menüpont!");
+                }
+
+            } catch (InputMismatchException ime) {
+                System.out.println("Ez nem egy szám!");
+                chooseFromMenu(dataSource);
             }
 
-        } catch (InputMismatchException ime) {
-            System.out.println("Ez nem egy szám!");
-            chooseFromMenu(dataSource);
         }
+
 
     }
 
@@ -70,13 +82,15 @@ public class VaccMain {
         Azonban az oltás meg is hiúsulhat. Pl. az állampolgár visszautasítja, olyan betegsége van, várandós, stb.
 Ezt is rögzíteni kell a rendszerben a TAJ szám, dátum és indoklás megadásával.
          */
-        VaccDao vd= new VaccDao(dataSource);
+        VaccDao vd = new VaccDao(dataSource);
         int citId = getTajAndRead(sc, vd).getCitId();
 
         System.out.println("Meghiúsulás oka: ");
-        String note= sc.nextLine();
-        String status= "failed";
-        LocalDateTime actualVacc= LocalDateTime.now();
+        String note = sc.nextLine();
+        String status = "failed";
+        LocalDateTime actualTime = LocalDateTime.now();
+
+        vd.doFailed(citId, actualTime, status, note);
 
     }
 
@@ -95,37 +109,39 @@ Azonban itt arra is figyelni kell, hogy az előző oltás óta 15 napnak el kell
 Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal lehet beoltani.
 
          */
-        VaccDao vd= new VaccDao(dataSource);
+        VaccDao vd = new VaccDao(dataSource);
 
         Vaccine vacc = getTajAndRead(sc, vd);
 
-        if(vacc!= null){
-            if(vacc.isVaccined()){
+        if (vacc != null) {
+            if (vacc.isVaccined()) {
                 System.out.printf("%d oltást kapott, beoltva legutóbb %s -n.\n", vacc.getTimes(), vacc.getLastDate());
-                caseVacc(sc, vd, vacc);
-            }else{
+
+            } else {
                 System.out.println("Nem kapott még oltást.");
             }
+            caseVacc(sc, vd, vacc);
         }
 
     }
 
     private void caseVacc(Scanner sc, VaccDao vd, Vaccine vacc) {
-        LocalDateTime actualVacc= LocalDateTime.now();
+        LocalDateTime actualVacc = LocalDateTime.now();
 
-        switch (vacc.getTimes()){
+        switch (vacc.getTimes()) {
             case 2:
                 System.out.println("Már megvolt a 2 db oltása. Nem oltható.");
                 break;
             case 1:
 //                LocalDateTime actualVacc= LocalDateTime.now();
 
-                if(!vacc.getLastDate().isBefore(actualVacc.toLocalDate().minusDays(14))){
+                if (!vacc.getLastDate().isBefore(actualVacc.toLocalDate().minusDays(14))) {
                     System.out.println("Nem telt le 15 nap, nem oltható újra");
                     break;
-                };
+                }
+                ;
                 // else kiolvas vaccin. tábla: id alapj, típus
-                String type= vd.readTypeFromVacTable(vacc.getCitId());
+                String type = vd.readTypeFromVacTable(vacc.getCitId());
                 System.out.printf("Az oltóanyag típusa: %s\n", type);
                 vacc.setType(type);
                 vacc.setStatus("second");
@@ -149,12 +165,12 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
 
     private Vaccine getTajAndRead(Scanner sc, VaccDao vd) {
         System.out.println("Kérem a taj-számot: ");
-        String taj= sc.nextLine();
+        String taj = sc.nextLine();
         while (!isCdvValid(taj)) {
             System.out.println("Nem valid, kérem újra: ");
             taj = sc.nextLine();
         }
-        Vaccine vacc= vd.readDataFromCitizen(taj);
+        Vaccine vacc = vd.readDataFromCitizen(taj);
         System.out.println(vacc);
         return vacc;
     }
@@ -164,9 +180,9 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
         kérje be az irányítószámot, majd a fájlt, amilyen néven el kell menteni
          */
         System.out.println("Kérem az irányítószámot: ");
-        String zip= sc.nextLine();
+        String zip = sc.nextLine();
         System.out.println("Kérem a mentendő fájl nevét: ");
-        String fileName= sc.nextLine();
+        String fileName = sc.nextLine();
         new VaccDao(dataSource).selectCitizensWithZip(zip, fileName);
     }
 
@@ -177,13 +193,13 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
         amúgy töltse be a citizens táblába
          */
         System.out.println("Adja meg a fájl elérési útját: ");
-        String path= sc.nextLine();
+        String path = sc.nextLine();
         try (BufferedReader reader = Files.newBufferedReader(Path.of(path))) {
-            String line= reader.readLine();
-            while ((line = reader.readLine())  != null) {
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
 
-                String parts[]= line.split(";");
-                Citizen cit= new Citizen(parts[0], parts[1], Integer.parseInt(parts[2]), parts[3], parts[4] );
+                String parts[] = line.split(";");
+                Citizen cit = new Citizen(parts[0], parts[1], Integer.parseInt(parts[2]), parts[3], parts[4]);
                 new VaccDao(dataSource).saveCitizen(cit);
             }
         } catch (IOException ioe) {
@@ -242,11 +258,11 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
 //            System.out.println("Üres, kérem újra: ");
 //            regZipcode(sc);
 //        }
-        List<String> cities= writeCity(zip);
-        while (zip.isEmpty()|| cities.isEmpty()) {
+        List<String> cities = writeCity(zip);
+        while (zip.isEmpty() || cities.isEmpty()) {
             System.out.println("Üres, vagy nincs ilyen irsz., kérem újra: ");
             zip = sc.nextLine();
-            cities= writeCity(zip);
+            cities = writeCity(zip);
         }
 //        String city= writeCity(zip);
 
@@ -261,8 +277,7 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
             dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccination?useUnicode=true");
             dataSource.setUser("vaccination");
             dataSource.setPassword("vaccination");
-        }
-        catch (SQLException se) {
+        } catch (SQLException se) {
             throw new IllegalStateException("Can not create data source", se);
         }
         return new VaccDao(dataSource).writeCityFromZip(zip);
@@ -271,7 +286,7 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
     private int regAge(Scanner sc) {
 //        try {
         boolean isNumber = false;
-        int age= 0;
+        int age = 0;
         while (!isNumber) {
             if (sc.hasNextInt()) {
                 isNumber = true;
@@ -279,10 +294,23 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
                 sc.nextLine();
                 while (age < 10 || age > 150) {
                     System.out.println("Min 10, max 150, kérném újra: ");
-                    age = sc.nextInt();
-                    sc.nextLine();
+//                    age = sc.nextInt();
+//                    sc.nextLine();
+
+//                    regAge(sc);
+//                    isNumber= false;
+//                    continue;
+                    if (sc.hasNextInt()) {
+                        isNumber = true;
+                        age = sc.nextInt();
+                        sc.nextLine();
+                    }else{
+                        System.out.println("nem szám");
+                        sc.nextLine();
+                    }
+
                 }
-            }else{
+            } else {
                 System.out.println("nem szám, kérem újra: ");
                 sc.nextLine();  ///
             }
@@ -361,11 +389,10 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
             dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccination?useUnicode=true");
             dataSource.setUser("vaccination");
             dataSource.setPassword("vaccination");
-        }
-        catch (SQLException se) {
+        } catch (SQLException se) {
             throw new IllegalStateException("Can not create data source", se);
         }
-        VaccDao vd= new VaccDao(dataSource);
+        VaccDao vd = new VaccDao(dataSource);
 
 //        Flyway flyway = Flyway.configure().locations("/db/migration/vaccination").dataSource(dataSource).load();
 //
@@ -375,10 +402,8 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
 
 
         VaccMain vm = new VaccMain();
-        vm.printMenu();
+
         vm.chooseFromMenu(dataSource);
-//        System.out.println(vm.isCdvValid("111111110"));
-//        System.out.println(vm.isCdvValid("111111117"));
 
 
     }

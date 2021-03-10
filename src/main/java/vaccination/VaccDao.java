@@ -178,4 +178,22 @@ public class VaccDao {
             throw new IllegalStateException("Cannot insert", se);
         }
     }
+
+    public void doFailed(int citId, LocalDateTime actualTime, String status, String note) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt =
+                        conn.prepareStatement("insert into vaccinations(citizen_id, vaccination_date," +
+                                "status, note) values (?, ?, ?, ?)")
+                        ) {
+            stmt.setInt(1, citId);
+            stmt.setTimestamp(2, Timestamp.valueOf(actualTime));
+            stmt.setString(3, status);
+            stmt.setString(4, note);
+            stmt.executeUpdate();
+
+        } catch (SQLException se) {
+            throw new IllegalStateException("Cannot insert", se);
+        }
+    }
 }
