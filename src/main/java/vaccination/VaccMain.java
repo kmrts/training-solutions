@@ -1,5 +1,6 @@
 package vaccination;
 
+import org.flywaydb.core.Flyway;
 import org.mariadb.jdbc.MariaDbDataSource;
 
 import javax.sql.DataSource;
@@ -21,13 +22,11 @@ public class VaccMain {
                 "3. Generálás\n" +
                 "4. Oltás\n" +
                 "5. Oltás meghiúsulás\n" +
-                "6. Riport\n"); // +
-//                "99. Kilépés");
+                "6. Riport\n");
     }
 
     public void chooseFromMenu(DataSource dataSource) {
-//        boolean stepOut = false;
-//        while (!stepOut) {
+
             printMenu();
 
             System.out.println("Válassz menüpontot: ");
@@ -60,14 +59,11 @@ public class VaccMain {
                         System.out.println("Riport");
                         report(sc, dataSource);
                         break;
-//                    case 99:
-//                        System.out.println("Kilépés\n");
-//                        stepOut = true;
-//                        break;
+
                     default:
                         System.out.println("Nincs ilyen menüpont!");
                 }
-                System.out.println("\nKilép (X) vagy folytat (bármi)?");
+                System.out.println("\nKilép (X) vagy folytat ?");
                 if(!sc.nextLine().toUpperCase().startsWith("X")){
                     chooseFromMenu(dataSource);
                 }
@@ -76,8 +72,6 @@ public class VaccMain {
                 System.out.println("Ez nem egy szám!");
                 chooseFromMenu(dataSource);
             }
-//        }
-
 
     }
 
@@ -86,7 +80,6 @@ public class VaccMain {
         Az alkalmazásba kell egy riportot is megvalósítani, ami kiírja, hogy irányítószámonként hány beoltatlan,
         egyszer és kétszer beoltott állampolgár van.
          */
-//        Map<String, List<Integer>> zipvacc= new TreeMap<>();
 
         VaccDao vd = new VaccDao(dataSource);
         Map<String, List<Integer>> zipvacc= vd.getNumOfVaccByZip();
@@ -417,21 +410,26 @@ Valamint ki kell írnia az előző oldás gyártóját, mert csak ugyanazzal leh
     public static void main(String[] args) {
         MariaDbDataSource dataSource;
         try {
+            //kézzel beállított táblák, Flyway nélkül:
+//            dataSource = new MariaDbDataSource();
+//            dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccination?useUnicode=true");
+//            dataSource.setUser("vaccination");
+//            dataSource.setPassword("vaccination");
+
+            //Flyway vált, előtte kézzel séma/ad.b. létrehozása
             dataSource = new MariaDbDataSource();
-            dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccination?useUnicode=true");
-            dataSource.setUser("vaccination");
-            dataSource.setPassword("vaccination");
+            dataSource.setUrl("jdbc:mariadb://localhost:3306/vaccin1?useUnicode=true");
+            dataSource.setUser("vaccin1");
+            dataSource.setPassword("vaccin1");
+
         } catch (SQLException se) {
             throw new IllegalStateException("Can not create data source", se);
         }
         VaccDao vd = new VaccDao(dataSource);
 
-//        Flyway flyway = Flyway.configure().locations("/db/migration/vaccination").dataSource(dataSource).load();
-//
-////        flyway.clean();
-//
-//        flyway.migrate();
-
+        Flyway flyway = Flyway.configure().locations("/db/migration/vaccination").dataSource(dataSource).load();
+        flyway.clean();
+        flyway.migrate();
 
         VaccMain vm = new VaccMain();
 
