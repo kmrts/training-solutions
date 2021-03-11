@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class VaccMain {
@@ -20,13 +21,13 @@ public class VaccMain {
                 "3. Generálás\n" +
                 "4. Oltás\n" +
                 "5. Oltás meghiúsulás\n" +
-                "6. Riport\n" +
-                "99. Kilépés");
+                "6. Riport\n"); // +
+//                "99. Kilépés");
     }
 
     public void chooseFromMenu(DataSource dataSource) {
-        boolean stepOut = false;
-        while (!stepOut) {
+//        boolean stepOut = false;
+//        while (!stepOut) {
             printMenu();
 
             System.out.println("Válassz menüpontot: ");
@@ -59,20 +60,23 @@ public class VaccMain {
                         System.out.println("Riport");
                         report(sc, dataSource);
                         break;
-                    case 99:
-                        System.out.println("Kilépés\n");
-                        stepOut = true;
-                        break;
+//                    case 99:
+//                        System.out.println("Kilépés\n");
+//                        stepOut = true;
+//                        break;
                     default:
                         System.out.println("Nincs ilyen menüpont!");
+                }
+                System.out.println("\nKilép (X) vagy folytat (bármi)?");
+                if(!sc.nextLine().toUpperCase().startsWith("X")){
+                    chooseFromMenu(dataSource);
                 }
 
             } catch (InputMismatchException ime) {
                 System.out.println("Ez nem egy szám!");
                 chooseFromMenu(dataSource);
             }
-
-        }
+//        }
 
 
     }
@@ -89,8 +93,8 @@ public class VaccMain {
         System.out.println("Képernyőre vagy fájlba írjuk? (F / other)");
         String key= sc.nextLine().toUpperCase();
         if(key.startsWith("F")){
-
-            String fileName= "vaccine_report_"+ LocalDate.now()+ ".log";
+            DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyy-MM-dd__HH'h'-mm");
+            String fileName= "vaccine_report_"+ LocalDateTime.now().format(formatter)+ ".log";
             System.out.println("Fájlba írás: "+ fileName);
             vd.reportToFile(zipvacc, fileName);
         }else{
