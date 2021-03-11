@@ -152,7 +152,7 @@ public class VaccDao {
             }
             throw new IllegalArgumentException("No result");
         } catch (SQLException se) {
-            throw new IllegalStateException("Cannot select employees", se);
+            throw new IllegalStateException("Cannot select vaccination", se);
         }
     }
 
