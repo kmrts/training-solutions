@@ -32,7 +32,9 @@ class ActivityDaoTest {
             throw new IllegalStateException("Can not create data source", se);
         }
 
-        Flyway flyway = Flyway.configure().dataSource(dataSource).load();
+//        Flyway flyway = Flyway.configure().dataSource(dataSource).load();
+        //ne akadjon össze másikkal:
+        Flyway flyway = Flyway.configure().locations("/db/migration/activities").dataSource(dataSource).load();
         flyway.clean();
         flyway.migrate();
 
@@ -52,6 +54,7 @@ class ActivityDaoTest {
 
 //        ActivityDao acd= new ActivityDao(dataSource);
         System.out.println(acd.saveActivity(activities.get(1)) );
+        System.out.println(acd.saveActivity(activities.get(2)) );
 
     }
 
