@@ -62,8 +62,8 @@ public class VaccDao {
         try (
                 Connection conn = dataSource.getConnection();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `zip`=" + zip +
-                        " ORDER BY `age` DESC, `citizen_name`")
+                ResultSet rs = stmt.executeQuery("SELECT * FROM `citizens` WHERE `zip`=\"" +  zip +
+                        "\" ORDER BY `age` DESC, `citizen_name`")  //+ zip +
         ) {
             writeCitizenDataTofile(rs, fileName);
 
