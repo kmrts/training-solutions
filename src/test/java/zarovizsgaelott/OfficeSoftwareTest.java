@@ -1,4 +1,4 @@
-package zarovizsgelott;
+package zarovizsgaelott;
 
 import org.junit.jupiter.api.Test;
 

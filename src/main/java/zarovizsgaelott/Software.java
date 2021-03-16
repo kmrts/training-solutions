@@ -1,4 +1,4 @@
-package zarovizsgelott;
+package zarovizsgaelott;
 
 public abstract class Software {
     /*
@@ -9,8 +9,8 @@ public abstract class Software {
     Legyen egy increasePrice() metódusa, mely OfficeSoftware  esetén az árat 5%-kal, a DeveloperSoftware árát 10%-kal emeli.
     Írj a két leszármazotthoz teszteseteket!
      */
-    private String name;
-    public int price;
+    String name;
+    int price; //public v.
 
     public abstract void increasePrice();
 

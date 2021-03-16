@@ -1,4 +1,4 @@
-package zarovizsgelott;
+package zarovizsgaelott;
 
 public class OfficeSoftware extends Software{
 
