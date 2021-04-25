@@ -32,8 +32,8 @@ public class UserImpl implements User{
 //        return null;
 //    }
 
-    @Override
-    public User of(String username, String firstName, String lastName) {
-        return new UserImpl(username, firstName, lastName);
-    }
+//    @Override
+//    public User of(String username, String firstName, String lastName) {
+//        return new UserImpl(username, firstName, lastName);
+//    }
 }

@@ -13,7 +13,11 @@ class UserImplTest {
         assertEquals("feri", user.getUsername());
         assertEquals("Ferenc Orbit", user.getFullName());
 
-        User user1= user.of("baelah", "Béla", "Taylor");
+//        User user1= user.of("baelah", "Béla", "Taylor");
+//        assertEquals("Taylor", user1.getLastName());
+//        assertEquals("Béla Taylor", user1.getFullName());
+
+        User user1= User.of("baelah", "Béla", "Taylor");
         assertEquals("Taylor", user1.getLastName());
         assertEquals("Béla Taylor", user1.getFullName());
     }

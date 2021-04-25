@@ -21,6 +21,8 @@ egy új User típusú objektumot!
         return getFirstName()+ " "+ getLastName();
     }
 
-    User of(String username, String firstName, String lastName) ;
+    static User of(String username, String firstName, String lastName){
+        return new UserImpl(username, firstName, lastName);
+    }
 
 }
