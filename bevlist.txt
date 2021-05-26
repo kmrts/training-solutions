@@ -1,0 +1,5 @@
+kenyér;2;300
+zsemle;5;50
+kifli;7;45
+baguette;2;400
+brioche;3;112
